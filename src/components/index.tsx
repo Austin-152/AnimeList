@@ -22,8 +22,41 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel } from "@/components/ui/carousel"
+import { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect } from 'react';
 
-export function index() {
+interface DataItem {
+  id: number;
+  typeId1: number;
+  name: string;
+  picThumb: string;
+}
+
+interface ApiResponse {
+  code: number;
+  data: DataItem[];
+  msg: string;
+}
+
+
+export function Index() {
+  const [animeData, setAnimeData] = useState<DataItem[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get<ApiResponse>('/api/anime');
+        if (response.data.code === 200) {
+          setAnimeData(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
@@ -44,7 +77,7 @@ export function index() {
           <Button className="text-gray-50 hover:bg-gray-900/50" variant="ghost">
             Sign In
           </Button>
-          <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]" variant="solid">
+          <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]" variant="outline">
             Sign Up
           </Button>
         </nav>
@@ -54,18 +87,19 @@ export function index() {
         </Button>
       </header>
       <main className="flex-1">
-        <section className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
+        <section
+            className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">Welcome to Anime Hub</h1>
           <p className="text-lg md:text-xl mt-4 max-w-2xl text-center">
             Discover the latest and greatest anime series, movies, and more.
           </p>
           <form className="mt-8 w-full max-w-xl">
             <div className="relative">
-              <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
               <Input
-                className="bg-gray-900 border-gray-800 text-gray-50 pl-12 pr-4 py-3 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-gray-700"
-                placeholder="Search for anime..."
-                type="search"
+                  className="bg-gray-900 border-gray-800 text-gray-50 pl-12 pr-4 py-3 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-gray-700"
+                  placeholder="Search for anime..."
+                  type="search"
               />
             </div>
           </form>
@@ -79,66 +113,30 @@ export function index() {
           </div>
           <Carousel className="w-full max-w-6xl">
             <CarouselContent>
-              <CarouselItem>
-                <div className="p-2">
-                  <Card className="group">
-                    <Link href="#">
-                      <img
-                        alt="Attack on Titan"
-                        className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                        height="300"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                      <div className="mt-4">
-                        <h3 className="text-lg font-bold">Attack on Titan</h3>
-                        <p className="text-gray-400 text-sm">Action, Drama, Fantasy</p>
-                      </div>
-                    </Link>
-                  </Card>
-                </div>
-              </CarouselItem>
-              <CarouselItem>
-                <div className="p-2">
-                  <Card className="group">
-                    <Link href="#">
-                      <img
-                        alt="Demon Slayer"
-                        className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                        height="300"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                      <div className="mt-4">
-                        <h3 className="text-lg font-bold">Demon Slayer</h3>
-                        <p className="text-gray-400 text-sm">Action, Fantasy</p>
-                      </div>
-                    </Link>
-                  </Card>
-                </div>
-              </CarouselItem>
-              <CarouselItem>
-                <div className="p-2">
-                  <Card className="group">
-                    <Link href="#">
-                      <img
-                        alt="My Hero Academia"
-                        className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                        height="300"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                      <div className="mt-4">
-                        <h3 className="text-lg font-bold">My Hero Academia</h3>
-                        <p className="text-gray-400 text-sm">Action, Comedy, Superhero</p>
-                      </div>
-                    </Link>
-                  </Card>
-                </div>
-              </CarouselItem>
+              {animeData.map((anime) => (
+                  <CarouselItem key={anime.id}>
+                    <div className="p-2">
+                      <Card className="group">
+                        <Link href="#">
+                          <img
+                              alt={`https://www.olevod.tv/player/vod/${anime.typeId1}-${anime.id}-1.html`}
+                              className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                              height="300"
+                              src="/placeholder.svg"
+                              width="200"
+                          />
+                          <div className="mt-4">
+                            <h3 className="text-lg font-bold">{anime.name}</h3>
+                            <p className="text-gray-400 text-sm">Action, Drama, Fantasy</p>
+                          </div>
+                        </Link>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+              ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious/>
+            <CarouselNext/>
           </Carousel>
         </section>
         <section className="py-12 md:py-24 px-4 md:px-6">
@@ -152,11 +150,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Chainsaw Man"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Chainsaw Man"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Chainsaw Man</h3>
@@ -167,11 +165,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Spy x Family"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Spy x Family"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Spy x Family</h3>
@@ -182,11 +180,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Jujutsu Kaisen"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Jujutsu Kaisen"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Jujutsu Kaisen</h3>
@@ -197,11 +195,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Tokyo Revengers"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Tokyo Revengers"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Tokyo Revengers</h3>
@@ -222,11 +220,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Blue Lock"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Blue Lock"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Blue Lock</h3>
@@ -237,11 +235,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="The Eminence in Shadow"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="The Eminence in Shadow"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">The Eminence in Shadow</h3>
@@ -252,11 +250,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Mob Psycho 100"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Mob Psycho 100"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Mob Psycho 100</h3>
@@ -267,11 +265,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Bleach: Thousand-Year Blood War"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Bleach: Thousand-Year Blood War"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Bleach: Thousand-Year Blood War</h3>
@@ -292,11 +290,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="One Piece"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="One Piece"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">One Piece</h3>
@@ -307,11 +305,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Naruto"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Naruto"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Naruto</h3>
@@ -322,11 +320,11 @@ export function index() {
             <Card className="group">
               <Link href="#">
                 <img
-                  alt="Dragon Ball Z"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
+                    alt="Dragon Ball Z"
+                    className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                    height="300"
+                    src="/placeholder.svg"
+                    width="200"
                 />
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Dragon Ball Z</h3>
@@ -335,7 +333,7 @@ export function index() {
               </Link>
             </Card>
             <Card className="group">
-              <Link href="#" />
+              <Link href="#"/>
             </Card>
           </div>
         </section>
@@ -346,63 +344,64 @@ export function index() {
 
 function FanIcon(props) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z" />
-      <path d="M12 12v.01" />
-    </svg>
+      <svg
+          {...props}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+      >
+        <path
+            d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z"/>
+        <path d="M12 12v.01"/>
+      </svg>
   )
 }
 
 
 function MenuIcon(props) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
+      <svg
+          {...props}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+      >
+        <line x1="4" x2="20" y1="12" y2="12"/>
+        <line x1="4" x2="20" y1="6" y2="6"/>
+        <line x1="4" x2="20" y1="18" y2="18"/>
+      </svg>
   )
 }
 
 
 function SearchIcon(props) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
+      <svg
+          {...props}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+      >
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.3-4.3"/>
+      </svg>
   )
 }
