@@ -48,15 +48,20 @@ export function Index() {
       try {
         const response = await axios.get<ApiResponse>('/api/anime');
         if (response.data.code === 200) {
-          setAnimeData(response.data.data);
+          const updatedData = response.data.data.map(anime => ({
+            ...anime,
+            picThumb: `https://www.olevod.tv/${anime.picThumb}`,
+
+          }));
+          setAnimeData(updatedData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
-
     fetchData();
   }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
@@ -122,7 +127,7 @@ export function Index() {
                               alt={`https://www.olevod.tv/player/vod/${anime.typeId1}-${anime.id}-1.html`}
                               className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
                               height="300"
-                              src="/placeholder.svg"
+                              src={anime.picThumb}
                               width="200"
                           />
                           <div className="mt-4">
