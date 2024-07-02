@@ -46,9 +46,9 @@ export function Index() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get<ApiResponse>('/api/anime');
-        if (response.data.code === 200) {
-          const updatedData = response.data.data.map(anime => ({
+        const response = await fetchSearchResults('美', page, size);
+        if (response.code === 200) {
+          const updatedData = response.data.map((anime) => ({
             ...anime,
             picThumb: `https://www.olevod.tv/${anime.picThumb}`,
 
