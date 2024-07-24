@@ -45,7 +45,7 @@ export function index() {
           <Button className="text-gray-50 hover:bg-gray-900/50" variant="ghost">
             Sign In
           </Button>
-          <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]" variant="solid">
+          <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
             Sign Up
           </Button>
         </nav>
@@ -345,7 +345,7 @@ export function index() {
   )
 }
 
-function FanIcon(props) {
+function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -366,7 +366,7 @@ function FanIcon(props) {
 }
 
 
-function MenuIcon(props) {
+function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -388,7 +388,7 @@ function MenuIcon(props) {
 }
 
 
-function SearchIcon(props) {
+function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -407,3 +407,4 @@ function SearchIcon(props) {
     </svg>
   )
 }
+export { FanIcon, MenuIcon, SearchIcon };

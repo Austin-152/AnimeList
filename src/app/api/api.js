@@ -5,9 +5,9 @@ import axios from 'axios';
 // 这个函数接受三个参数：keyword（关键词），page（页码，默认为1），size（每页的数量，默认为10）
 const fetchSearchResults = async (keyword, page=1, size=10) => {
     try {
-        // 使用 axios 发送 GET 请求到指定的 URL
+        // 使用 axios 发送 POST 请求到指定的 URL
         // 请求参数包括 keyword、page 和 size
-        const response = await axios.get('https://api.tzpro.xyz/api/v1/search', {
+        const response = await axios.post('https://api.tzpro.xyz/api/v1/search', {
             params: {
                 keyword,
                 page,
