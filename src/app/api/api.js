@@ -7,7 +7,7 @@ const fetchSearchResults = async (keyword, page=1, size=10) => {
     try {
         // 使用 axios 发送 POST 请求到指定的 URL
         // 请求参数包括 keyword、page 和 size
-        const response = await axios.post('https://api.tzpro.xyz/api/v1/search', {
+        const response = await axios.post('https://auth.tzpro.xyz/sign-in?no_cache=', {
             params: {
                 keyword,
                 page,
