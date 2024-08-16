@@ -78,13 +78,13 @@ export function Index() {
           <p className="text-lg md:text-xl mt-4 max-w-2xl text-center">
             Discover the latest and greatest anime series, movies, and more.
           </p>
-          <form className="mt-8 w-full max-w-xl">
+          <form className="mt-8 w-full max-w-xl" onSubmit={handleSearch}>
             <div className="relative">
-              <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
               <Input
-                className="bg-gray-900 border-gray-800 text-gray-50 pl-12 pr-4 py-3 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-gray-700"
-                placeholder="Search for anime..."
-                type="search"
+                  className="bg-gray-900 border-gray-800 text-gray-50 pl-12 pr-4 py-3 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-gray-700"
+                  placeholder="Search for anime..."
+                  type="search"
               />
             </div>
           </form>
