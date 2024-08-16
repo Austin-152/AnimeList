@@ -22,8 +22,26 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel } from "@/components/ui/carousel"
+import React, { useState } from 'react';
+import { fetchSearchResults } from '@/app/api/api';
+import { Item } from "@/app/api/api";
+import "@/mockjs/index";//引入mockjs
 
-export function index() {
+export function Index() {
+  const [data, setData] = useState<Item[]>([]);
+
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const keyword = (event.currentTarget.elements[0] as HTMLInputElement).value;
+
+    try {
+      const results = await fetchSearchResults(keyword, 1, 10);
+      setData(results.data);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
+  };
+
   // @ts-ignore
   return (
     <div className="flex flex-col min-h-screen">
@@ -73,143 +91,29 @@ export function index() {
         </section>
         <section className="py-12 md:py-24 px-4 md:px-6">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Featured Anime</h2>
-            <Link className="text-sm md:text-base hover:underline" href="#">
-              View all
-            </Link>
-          </div>
-          <Carousel className="w-full max-w-6xl">
-            <CarouselContent>
-              <CarouselItem>
-                <div className="p-2">
-                  <Card className="group">
-                    <Link href="#">
-                      <img
-                        alt="Attack on Titan"
-                        className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                        height="300"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                      <div className="mt-4">
-                        <h3 className="text-lg font-bold">Attack on Titan</h3>
-                        <p className="text-gray-400 text-sm">Action, Drama, Fantasy</p>
-                      </div>
-                    </Link>
-                  </Card>
-                </div>
-              </CarouselItem>
-              <CarouselItem>
-                <div className="p-2">
-                  <Card className="group">
-                    <Link href="#">
-                      <img
-                        alt="Demon Slayer"
-                        className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                        height="300"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                      <div className="mt-4">
-                        <h3 className="text-lg font-bold">Demon Slayer</h3>
-                        <p className="text-gray-400 text-sm">Action, Fantasy</p>
-                      </div>
-                    </Link>
-                  </Card>
-                </div>
-              </CarouselItem>
-              <CarouselItem>
-                <div className="p-2">
-                  <Card className="group">
-                    <Link href="#">
-                      <img
-                        alt="My Hero Academia"
-                        className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                        height="300"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                      <div className="mt-4">
-                        <h3 className="text-lg font-bold">My Hero Academia</h3>
-                        <p className="text-gray-400 text-sm">Action, Comedy, Superhero</p>
-                      </div>
-                    </Link>
-                  </Card>
-                </div>
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </section>
-        <section className="py-12 md:py-24 px-4 md:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Trending Anime</h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Search results</h2>
             <Link className="text-sm md:text-base hover:underline" href="#">
               View all
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Chainsaw Man"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Chainsaw Man</h3>
-                  <p className="text-gray-400 text-sm">Action, Supernatural</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Spy x Family"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Spy x Family</h3>
-                  <p className="text-gray-400 text-sm">Action, Comedy</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Jujutsu Kaisen"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Jujutsu Kaisen</h3>
-                  <p className="text-gray-400 text-sm">Action, Supernatural</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Tokyo Revengers"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Tokyo Revengers</h3>
-                  <p className="text-gray-400 text-sm">Action, Drama</p>
-                </div>
-              </Link>
-            </Card>
+            {data.map((item) => (
+                <Card className="group" key={item.id}>
+                  <Link href={`https://www.olevod.tv/player/vod/${item.typeId1}-${item.id}-1.html`}>
+                    <img
+                        alt={item.name}
+                        className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
+                        height="300"
+                        src={`https://www.olevod.tv/${item.picThumb}`}
+                        width="200"
+                    />
+                    <div className="mt-4">
+                      <h3 className="text-lg font-bold">{item.name}</h3>
+                      <p className="text-gray-400 text-sm">{item.blurb}</p>
+                    </div>
+                  </Link>
+                </Card>
+            ))}
           </div>
         </section>
         <section className="py-12 md:py-24 px-4 md:px-6">
