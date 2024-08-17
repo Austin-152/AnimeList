@@ -25,7 +25,7 @@ import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel
 import React, { useState } from 'react';
 import { fetchSearchResults } from '@/app/api/api';
 import { Item } from "@/app/api/api";
-import "@/mockjs/index";//引入mockjs
+// import "@/mockjs/index";//引入mockjs
 
 export function Index() {
   const [data, setData] = useState<Item[]>([]);
@@ -35,7 +35,7 @@ export function Index() {
     const keyword = (event.currentTarget.elements[0] as HTMLInputElement).value;
 
     try {
-      const results = await fetchSearchResults(keyword, 1, 10);
+      const results = await fetchSearchResults(keyword, "1", 10);
       setData(results.data);
     } catch (error) {
       console.error('Error fetching search results:', error);

@@ -1,18 +1,6 @@
 // 导入 axios 库，用于发送 HTTP 请求
 import axios from 'axios';
 // 首先需要引入axios 如果没安装的话 在终端输入npm i axios 安装一下
-export default {
-    methods: {
-        getData() {
-            console.log('Sending POST request to http://localhost:3001/');
-            axios.post("http://localhost:3001/").then(res => {
-                console.log(res);
-            }).catch(error => {
-                console.log(error);
-            })
-        },
-    },
-};
 // 定义一个接口，描述你的数据对象的结构
 interface Item {
     id: number;
@@ -23,12 +11,12 @@ interface Item {
 }
 // 定义一个异步函数 fetchSearchResults，用于获取搜索结果
 // 这个函数接受三个参数：keyword（关键词），page（页码，默认为1），size（每页的数量，默认为10）
-const fetchSearchResults = async (keyword: string, page=1, size=10) => {
+const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     try {
         // 使用 axios 发送 POST 请求到指定的 URL
         // 请求参数包括 keyword、page 和 size
-        console.log(`Sending POST request to http://localhost:3001/ with keyword: ${keyword}, page: ${page}, size: ${size}`);
-        const response = await axios.post('http://localhost:3001/', {
+        console.log(`Sending POST request to https://testapi.tzpro.xyz/ with keyword: ${keyword}, page: ${page}, size: ${size}`);
+        const response = await axios.post('https://testapi.tzpro.xyz/api/v1/search', {
             params: {
                 keyword,
                 page,
