@@ -13,21 +13,16 @@ interface Item {
 // 这个函数接受三个参数：keyword（关键词），page（页码，默认为1），size（每页的数量，默认为10）
 const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     try {
-        // 使用 axios 发送 POST 请求到指定的 URL
-        // 请求参数包括 keyword、page 和 size
         console.log(`Sending POST request to https://testapi.tzpro.xyz/ with keyword: ${keyword}, page: ${page}, size: ${size}`);
         const response = await axios.post('https://testapi.tzpro.xyz/api/v1/search', {
-            params: {
-                keyword,
-                page,
-                size
-            }
+            keyword,
+            page,
+            size
         });
 
-        // 如果请求成功，返回响应数据
-        return response.data;
+        // Return response.data.data instead of response.data
+        return response.data.data;
     } catch (error) {
-        // 如果请求失败，打印错误信息并抛出错误
         console.error('Error fetching search results:', error);
         throw error;
     }

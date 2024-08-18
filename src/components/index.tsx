@@ -36,7 +36,13 @@ export function Index() {
 
     try {
       const results = await fetchSearchResults(keyword, "1", 10);
-      setData(results.data);
+      if (!Array.isArray(results.data)) {
+        throw new Error('fetchSearchResults did not return an array');
+      }
+
+      // Merge all the list arrays into one array
+      const data = results.data.reduce((acc: Item[], item: { list: Item[] | null }) => acc.concat(item.list || []), []);
+      setData(data);
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
