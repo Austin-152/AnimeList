@@ -35,6 +35,8 @@ export function Index() {
     const keyword = (event.currentTarget.elements[0] as HTMLInputElement).value;
 
     try {
+      // 先将data状态设置为一个空数组
+      setData([]);
       const results = await fetchSearchResults(keyword, "1", 10);
       if (!Array.isArray(results.data)) {
         throw new Error('fetchSearchResults did not return an array');
@@ -58,20 +60,22 @@ export function Index() {
         </Link>
         <nav className="hidden md:flex items-center gap-6">
           <Link className="hover:underline" href="#">
-            Browse
+            trending
           </Link>
-          <Link className="hover:underline" href="#">
-            Search
-          </Link>
+          {/*<Link className="hover:underline" href="#">*/}
+          {/*  Search*/}
+          {/*</Link>*/}
           <Link className="hover:underline" href="#">
             Subscriptions
           </Link>
-          <Button className="text-gray-50 hover:bg-gray-900/50" variant="ghost">
-            Sign In
-          </Button>
-          <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
-            Sign Up
-          </Button>
+          {/*<Button className="text-gray-50 hover:bg-gray-900/50" variant="ghost">*/}
+          {/*  Sign Up*/}
+          {/*</Button>*/}
+          <Link href="/api/auth/login">
+            <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
+              Sign In
+            </Button>
+          </Link>
         </nav>
         <Button className="md:hidden" size="icon" variant="ghost">
           <MenuIcon className="w-6 h-6" />
@@ -122,134 +126,135 @@ export function Index() {
             ))}
           </div>
         </section>
-        <section className="py-12 md:py-24 px-4 md:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Recently Added</h2>
-            <Link className="text-sm md:text-base hover:underline" href="#">
-              View all
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Blue Lock"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Blue Lock</h3>
-                  <p className="text-gray-400 text-sm">Sports, Drama</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="The Eminence in Shadow"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">The Eminence in Shadow</h3>
-                  <p className="text-gray-400 text-sm">Action, Comedy</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Mob Psycho 100"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Mob Psycho 100</h3>
-                  <p className="text-gray-400 text-sm">Action, Comedy, Supernatural</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Bleach: Thousand-Year Blood War"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Bleach: Thousand-Year Blood War</h3>
-                  <p className="text-gray-400 text-sm">Action, Supernatural</p>
-                </div>
-              </Link>
-            </Card>
-          </div>
-        </section>
-        <section className="py-12 md:py-24 px-4 md:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Anime Recommendations</h2>
-            <Link className="text-sm md:text-base hover:underline" href="#">
-              View all
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="One Piece"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">One Piece</h3>
-                  <p className="text-gray-400 text-sm">Action, Adventure, Fantasy</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Naruto"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Naruto</h3>
-                  <p className="text-gray-400 text-sm">Action, Adventure, Martial Arts</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#">
-                <img
-                  alt="Dragon Ball Z"
-                  className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="200"
-                />
-                <div className="mt-4">
-                  <h3 className="text-lg font-bold">Dragon Ball Z</h3>
-                  <p className="text-gray-400 text-sm">Action, Adventure, Fantasy</p>
-                </div>
-              </Link>
-            </Card>
-            <Card className="group">
-              <Link href="#" />
-            </Card>
-          </div>
-        </section>
+        {/*<section className="py-12 md:py-24 px-4 md:px-6">*/}
+        {/*  <div className="flex items-center justify-between mb-8">*/}
+        {/*    <h2 className="text-2xl md:text-3xl font-bold">Recently Added</h2>*/}
+        {/*    <Link className="text-sm md:text-base hover:underline" href="#">*/}
+        {/*      View all*/}
+        {/*    </Link>*/}
+        {/*  </div>*/}
+        {/*  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#">*/}
+        {/*        <img*/}
+        {/*          alt="Blue Lock"*/}
+        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
+        {/*          height="300"*/}
+        {/*          src="/placeholder.svg"*/}
+        {/*          width="200"*/}
+        {/*        />*/}
+        {/*        <div className="mt-4">*/}
+        {/*          <h3 className="text-lg font-bold">Blue Lock</h3>*/}
+        {/*          <p className="text-gray-400 text-sm">Sports, Drama</p>*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </Card>*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#">*/}
+        {/*        <img*/}
+        {/*          alt="The Eminence in Shadow"*/}
+        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
+        {/*          height="300"*/}
+        {/*          src="/placeholder.svg"*/}
+        {/*          width="200"*/}
+        {/*        />*/}
+        {/*        <div className="mt-4">*/}
+        {/*          <h3 className="text-lg font-bold">The Eminence in Shadow</h3>*/}
+        {/*          <p className="text-gray-400 text-sm">Action, Comedy</p>*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </Card>*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#">*/}
+        {/*        <img*/}
+        {/*          alt="Mob Psycho 100"*/}
+        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
+        {/*          height="300"*/}
+        {/*          src="/placeholder.svg"*/}
+        {/*          width="200"*/}
+        {/*        />*/}
+        {/*        <div className="mt-4">*/}
+        {/*          <h3 className="text-lg font-bold">Mob Psycho 100</h3>*/}
+        {/*          <p className="text-gray-400 text-sm">Action, Comedy, Supernatural</p>*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </Card>*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#">*/}
+        {/*        <img*/}
+        {/*          alt="Bleach: Thousand-Year Blood War"*/}
+        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
+        {/*          height="300"*/}
+        {/*          src="/placeholder.svg"*/}
+        {/*          width="200"*/}
+        {/*        />*/}
+        {/*        <div className="mt-4">*/}
+        {/*          <h3 className="text-lg font-bold">Bleach: Thousand-Year Blood War</h3>*/}
+        {/*          <p className="text-gray-400 text-sm">Action, Supernatural</p>*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </Card>*/}
+        {/*  </div>*/}
+        {/*</section>*/}
+
+        {/*<section className="py-12 md:py-24 px-4 md:px-6">*/}
+        {/*  <div className="flex items-center justify-between mb-8">*/}
+        {/*    <h2 className="text-2xl md:text-3xl font-bold">Anime Recommendations</h2>*/}
+        {/*    <Link className="text-sm md:text-base hover:underline" href="#">*/}
+        {/*      View all*/}
+        {/*    </Link>*/}
+        {/*  </div>*/}
+        {/*  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#">*/}
+        {/*        <img*/}
+        {/*          alt="One Piece"*/}
+        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
+        {/*          height="300"*/}
+        {/*          src="/placeholder.svg"*/}
+        {/*          width="200"*/}
+        {/*        />*/}
+        {/*        <div className="mt-4">*/}
+        {/*          <h3 className="text-lg font-bold">One Piece</h3>*/}
+        {/*          <p className="text-gray-400 text-sm">Action, Adventure, Fantasy</p>*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </Card>*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#">*/}
+        {/*        <img*/}
+        {/*          alt="Naruto"*/}
+        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
+        {/*          height="300"*/}
+        {/*          src="/placeholder.svg"*/}
+        {/*          width="200"*/}
+        {/*        />*/}
+        {/*        <div className="mt-4">*/}
+        {/*          <h3 className="text-lg font-bold">Naruto</h3>*/}
+        {/*          <p className="text-gray-400 text-sm">Action, Adventure, Martial Arts</p>*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </Card>*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#">*/}
+        {/*        <img*/}
+        {/*          alt="Dragon Ball Z"*/}
+        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
+        {/*          height="300"*/}
+        {/*          src="/placeholder.svg"*/}
+        {/*          width="200"*/}
+        {/*        />*/}
+        {/*        <div className="mt-4">*/}
+        {/*          <h3 className="text-lg font-bold">Dragon Ball Z</h3>*/}
+        {/*          <p className="text-gray-400 text-sm">Action, Adventure, Fantasy</p>*/}
+        {/*        </div>*/}
+        {/*      </Link>*/}
+        {/*    </Card>*/}
+        {/*    <Card className="group">*/}
+        {/*      <Link href="#" />*/}
+        {/*    </Card>*/}
+        {/*  </div>*/}
+        {/*</section>*/}
       </main>
     </div>
   )

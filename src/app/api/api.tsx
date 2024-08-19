@@ -14,7 +14,7 @@ interface Item {
 const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     try {
         console.log(`Sending POST request to https://testapi.tzpro.xyz/ with keyword: ${keyword}, page: ${page}, size: ${size}`);
-        const response = await axios.post('https://testapi.tzpro.xyz/api/v1/search', {
+        const response = await axios.post('/api/query/search', {
             keyword,
             page,
             size
