@@ -25,11 +25,12 @@ import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel
 import React, { useState } from 'react';
 import { fetchSearchResults } from '@/app/api/api';
 import { Item } from "@/app/api/api";
+import { fetchKeywordSuggestions } from '../app/api/api';
 // import "@/mockjs/index";//引入mockjs
 
 export function Index() {
   const [data, setData] = useState<Item[]>([]);
-
+  const [keyword, setKeyword] = useState<string>('');
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const keyword = (event.currentTarget.elements[0] as HTMLInputElement).value;
@@ -49,6 +50,27 @@ export function Index() {
       console.error('Error fetching search results:', error);
     }
   };
+  const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newKeyword = event.target.value;
+    setKeyword(newKeyword);
+
+    if (newKeyword) {
+      const newSuggestions = await fetchKeywordSuggestions(newKeyword);
+      setSuggestions(newSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  };
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  React.useEffect(() => {
+    const fetchSuggestions = async () => {
+      const result = await fetchKeywordSuggestions('your keyword');
+      setSuggestions(result);
+    };
+
+    fetchSuggestions();
+  }, []);
 
   // @ts-ignore
   return (
@@ -83,7 +105,8 @@ export function Index() {
         </Button>
       </header>
       <main className="flex-1">
-        <section className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
+        <section
+            className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">Welcome to Anime Hub</h1>
           <p className="text-lg md:text-xl mt-4 max-w-2xl text-center">
             Discover the latest and greatest anime series, movies, and more.
@@ -95,7 +118,14 @@ export function Index() {
                   className="bg-gray-900 border-gray-800 text-gray-50 pl-12 pr-4 py-3 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-gray-700"
                   placeholder="Search for anime..."
                   type="search"
+                  value={keyword}
+                  onChange={handleInputChange}
               />
+              <div className="absolute w-full bg-white border border-gray-300 divide-y divide-black">
+                {suggestions.map((suggestion, index) => (
+                    <div key={index} className="p-2 text-black">{suggestion}</div>
+                ))}
+              </div>
             </div>
           </form>
         </section>
@@ -126,6 +156,7 @@ export function Index() {
             ))}
           </div>
         </section>
+
         {/*<section className="py-12 md:py-24 px-4 md:px-6">*/}
         {/*  <div className="flex items-center justify-between mb-8">*/}
         {/*    <h2 className="text-2xl md:text-3xl font-bold">Recently Added</h2>*/}
@@ -262,19 +293,19 @@ export function Index() {
 
 function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z" />
+      <svg
+          {...props}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+      >
+        <path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z" />
       <path d="M12 12v.01" />
     </svg>
   )

@@ -9,12 +9,17 @@ interface Item {
     picThumb: string;
     blurb: string;
 }
+
+interface DataItem {
+    words: string[];
+}
+
 // 定义一个异步函数 fetchSearchResults，用于获取搜索结果
 // 这个函数接受三个参数：keyword（关键词），page（页码，默认为1），size（每页的数量，默认为10）
 const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     try {
         console.log(`Sending POST request to https://testapi.tzpro.xyz/ with keyword: ${keyword}, page: ${page}, size: ${size}`);
-        const response = await axios.post('/api/query/search', {
+        const response = await axios.post('http://animeapi.tzpro.xyz/api/query/ole/search', {
             keyword,
             page,
             size
@@ -28,6 +33,24 @@ const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     }
 };
 
-// 导出 fetchSearchResults 函数，使其可以在其他文件中被导入和使用
+// 在 api.tsx 文件中添加
+const fetchKeywordSuggestions = async (keyword: string) => {
+    try {
+        console.log(`Sending POST request to /api/query/keyword with keyword: ${keyword}`);
+        const response = await axios.post('https://animeapi.tzpro.xyz/api/query/ole/keyword', {
+            keyword
+        });
+
+        // Extract words from each item in the data array and flatten them into a single array
+        const suggestions = response.data.data.flatMap((item: DataItem) => item.words);
+
+        return suggestions;
+    } catch (error) {
+        console.error('Error fetching keyword suggestions:', error);
+        throw error;
+    }
+};
+
+export { fetchKeywordSuggestions };
 export { fetchSearchResults };
 export type { Item };
