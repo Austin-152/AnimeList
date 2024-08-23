@@ -28,6 +28,7 @@ import { Item } from "@/app/api/api";
 import { fetchKeywordSuggestions } from '../app/api/api';
 // import "@/mockjs/index";//引入mockjs
 
+
 export function Index() {
   const [data, setData] = useState<Item[]>([]);
   const [keyword, setKeyword] = useState<string>('');
@@ -54,6 +55,7 @@ export function Index() {
     const newKeyword = event.target.value;
     setKeyword(newKeyword);
 
+
     if (newKeyword) {
       const newSuggestions = await fetchKeywordSuggestions(newKeyword);
       setSuggestions(newSuggestions);
@@ -62,6 +64,11 @@ export function Index() {
     }
   };
     const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setKeyword(suggestion); // 将点击的联想词填入搜索框
+    setSuggestions([]); // 清空联想词
+  };
 
   React.useEffect(() => {
     const fetchSuggestions = async () => {
@@ -74,60 +81,67 @@ export function Index() {
 
   // @ts-ignore
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
-        <Link className="flex items-center gap-2 font-bold text-lg" href="#">
-          <FanIcon className="w-6 h-6" />
-          <span>Anime Hub</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-6">
-          <Link className="hover:underline" href="#">
-            trending
+      <div className="flex flex-col min-h-screen">
+        <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
+          <Link className="flex items-center gap-2 font-bold text-lg" href="#">
+            <FanIcon className="w-6 h-6" />
+            <span>Anime Hub</span>
           </Link>
-          {/*<Link className="hover:underline" href="#">*/}
-          {/*  Search*/}
-          {/*</Link>*/}
-          <Link className="hover:underline" href="#">
-            Subscriptions
-          </Link>
-          {/*<Button className="text-gray-50 hover:bg-gray-900/50" variant="ghost">*/}
-          {/*  Sign Up*/}
-          {/*</Button>*/}
-          <Link href="/api/auth/login">
-            <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
-              Sign In
-            </Button>
-          </Link>
-        </nav>
-        <Button className="md:hidden" size="icon" variant="ghost">
-          <MenuIcon className="w-6 h-6" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </header>
-      <main className="flex-1">
-        <section
-            className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">Welcome to Anime Hub</h1>
-          <p className="text-lg md:text-xl mt-4 max-w-2xl text-center">
-            Discover the latest and greatest anime series, movies, and more.
-          </p>
+          <nav className="hidden md:flex items-center gap-6">
+            <Link className="hover:underline" href="#">
+              trending
+            </Link>
+            <Link className="hover:underline" href="#">
+              Subscriptions
+            </Link>
+            <Link href="/api/auth/login">
+              <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
+                Sign In
+              </Button>
+            </Link>
+          </nav>
+          <Button className="md:hidden" size="icon" variant="ghost">
+            <MenuIcon className="w-6 h-6" />
+            <span className="sr-only">Toggle menu</span>
+          </Button>
+        </header>
+        <main className="flex-1">
+          <section className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">Welcome to Anime Hub</h1>
+            <p className="text-lg md:text-xl mt-4 max-w-2xl text-center">
+              Discover the latest and greatest anime series, movies, and more.
+            </p>
           <form className="mt-8 w-full max-w-xl" onSubmit={handleSearch}>
             <div className="relative">
+              {/* 搜索框 */}
               <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
               <Input
-                  className="bg-gray-900 border-gray-800 text-gray-50 pl-12 pr-4 py-3 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-gray-700"
+                  className="bg-gray-800 border-gray-700 text-gray-50 pl-12 pr-4 py-3 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-gray-700 relative z-10"
                   placeholder="Search for anime..."
                   type="search"
                   value={keyword}
                   onChange={handleInputChange}
               />
-              <div className="absolute w-full bg-white border border-gray-300 divide-y divide-black">
-                {suggestions.map((suggestion, index) => (
-                    <div key={index} className="p-2 text-black">{suggestion}</div>
-                ))}
-              </div>
+
+              {/* 联想词 */}
+              {suggestions.length > 0 && (
+                  <div
+                      className="absolute top-full left-0 w-full bg-gray-800 border border-gray-700 divide-y divide-gray-700 rounded-lg mt-1 z-10">
+                    {suggestions.map((suggestion, index) => (
+                        <div
+                            key={index}
+                            className="p-2 text-white hover:bg-gray-700 cursor-pointer"
+                            onClick={() => handleSuggestionClick(suggestion)}
+                        >
+                          {suggestion}
+                        </div>
+                    ))}
+                  </div>
+              )}
             </div>
           </form>
+
+
         </section>
         <section className="py-12 md:py-24 px-4 md:px-6">
           <div className="flex items-center justify-between mb-8">
