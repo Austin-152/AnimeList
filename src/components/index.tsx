@@ -92,14 +92,14 @@ export function Index() {
     setSuggestions([]); // 清空联想词
     handleSearch().then(r => console.log(r)); // 执行搜索
   };
-
-  React.useEffect(() => {
-    const fetchSuggestions = async () => {
-      const result = await fetchKeywordSuggestions('');
-      setSuggestions(result);
-    };
-    fetchSuggestions().then(r => console.log(r));
-  }, []);
+  // // 下面这个函数会在组件挂载后执行一次 不需要的话可以删除
+  // React.useEffect(() => {
+  //   const fetchSuggestions = async () => {
+  //     const result = await fetchKeywordSuggestions('');
+  //     setSuggestions(result);
+  //   };
+  //   fetchSuggestions().then(r => console.log(r));
+  // }, []);
 
   // @ts-ignore
   return (
