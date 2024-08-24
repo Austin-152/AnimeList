@@ -82,6 +82,7 @@ export function Index() {
   };
 
   // Create a debounced version of fetchSuggestions
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 1000), []);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
