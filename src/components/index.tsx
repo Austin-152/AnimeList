@@ -180,7 +180,7 @@ export function Index() {
                         alt={item.name}
                         className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
                         height="300"
-                        src={`https://www.olevod.tv/${item.picThumb}`}
+                        src={`https://www.olevod.tv/${item.pic}`}
                         width="200"
                     />
                     <div className="mt-4">

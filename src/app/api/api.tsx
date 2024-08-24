@@ -6,7 +6,7 @@ interface Item {
     id: number;
     typeId1: number;
     name: string;
-    picThumb: string;
+    pic: string;
     blurb: string;
 }
 
