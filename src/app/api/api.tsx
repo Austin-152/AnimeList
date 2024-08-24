@@ -19,7 +19,7 @@ interface DataItem {
 const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     try {
         console.log(`Sending POST request to https://testapi.tzpro.xyz/ with keyword: ${keyword}, page: ${page}, size: ${size}`);
-        const response = await axios.post('http://animeapi.tzpro.xyz/api/query/ole/search', {
+        const response = await axios.post('/api/query/ole/search', {
             keyword,
             page,
             size
@@ -37,7 +37,7 @@ const fetchSearchResults = async (keyword: string, page="1", size=10) => {
 const fetchKeywordSuggestions = async (keyword: string) => {
     try {
         console.log(`Sending POST request to /api/query/keyword with keyword: ${keyword}`);
-        const response = await axios.post('https://animeapi.tzpro.xyz/api/query/ole/keyword', {
+        const response = await axios.post('/api/query/ole/keyword', {
             keyword
         });
 

@@ -25,16 +25,19 @@ import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel
 import React, { useState } from 'react';
 import { fetchSearchResults } from '@/app/api/api';
 import { Item } from "@/app/api/api";
-import { fetchKeywordSuggestions } from '../app/api/api';
+import { fetchKeywordSuggestions } from '@/app/api/api';
 // import "@/mockjs/index";//引入mockjs
 
 
 export function Index() {
   const [data, setData] = useState<Item[]>([]);
   const [keyword, setKeyword] = useState<string>('');
-  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const keyword = (event.currentTarget.elements[0] as HTMLInputElement).value;
+  const handleSearch = async (event?: React.FormEvent<HTMLFormElement>) => {
+    // Prevent the form from being submitted if an event object was provided
+    event?.preventDefault();
+
+    // If event is undefined, use the current keyword state
+    const keywords = event ? (event.currentTarget.elements[0] as HTMLInputElement).value : keyword;
 
     try {
       // 先将data状态设置为一个空数组
@@ -68,6 +71,7 @@ export function Index() {
   const handleSuggestionClick = (suggestion: string) => {
     setKeyword(suggestion); // 将点击的联想词填入搜索框
     setSuggestions([]); // 清空联想词
+    handleSearch(); // 直接开始搜索
   };
 
   React.useEffect(() => {
