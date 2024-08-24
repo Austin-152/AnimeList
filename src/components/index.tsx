@@ -82,7 +82,7 @@ export function Index() {
   };
 
   // Create a debounced version of fetchSuggestions
-  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 500), []);
+  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 1000), []);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>('');
