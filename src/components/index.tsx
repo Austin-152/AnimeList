@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel } from "@/components/ui/carousel"
-import React, { useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import { fetchSearchResults } from '@/app/api/api';
 import { Item } from "@/app/api/api";
 import { fetchKeywordSuggestions } from '@/app/api/api';
@@ -31,7 +31,7 @@ import { fetchKeywordSuggestions } from '@/app/api/api';
 
 export function Index() {
   const [data, setData] = useState<Item[]>([]);
-  const [keyword, setKeyword] = useState<string>('');
+  // const [keyword, setKeyword] = useState<string>('');
   const handleSearch = async (event?: React.FormEvent<HTMLFormElement>) => {
     // Prevent the form from being submitted if an event object was provided
     event?.preventDefault();
@@ -54,33 +54,51 @@ export function Index() {
       console.error('Error fetching search results:', error);
     }
   };
+  // Debounce function to delay the execution
+  const debounce = (func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
   const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const newKeyword = event.target.value;
     setKeyword(newKeyword);
 
-
     if (newKeyword) {
-      const newSuggestions = await fetchKeywordSuggestions(newKeyword);
-      setSuggestions(newSuggestions);
+      debouncedFetchSuggestions(newKeyword);
     } else {
       setSuggestions([]);
     }
   };
-    const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  const fetchSuggestions = async (keyword: string) => {
+    const newSuggestions = await fetchKeywordSuggestions(keyword);
+    setSuggestions(newSuggestions);
+  };
+
+  // Create a debounced version of fetchSuggestions
+  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 500), []);
+
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [keyword, setKeyword] = useState<string>('');
 
   const handleSuggestionClick = (suggestion: string) => {
     setKeyword(suggestion); // 将点击的联想词填入搜索框
     setSuggestions([]); // 清空联想词
-    handleSearch(); // 直接开始搜索
+    handleSearch().then(r => console.log(r)); // 执行搜索
   };
 
   React.useEffect(() => {
     const fetchSuggestions = async () => {
-      const result = await fetchKeywordSuggestions('your keyword');
+      const result = await fetchKeywordSuggestions('');
       setSuggestions(result);
     };
-
-    fetchSuggestions();
+    fetchSuggestions().then(r => console.log(r));
   }, []);
 
   // @ts-ignore
