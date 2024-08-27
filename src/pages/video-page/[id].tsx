@@ -16,26 +16,26 @@ const VideoPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (id) {
-            const fetchData = async () => {
+        const fetchData = async () => {
+            if (id) {
                 console.log(`Sending POST request to /api/query/ole/detail with keyword: ${id}`);
                 try {
                     const details = await fetchVideoDetails(id as string);
+                    console.log('Fetched video details:', details);  // 打印请求返回的数据
                     setVideoDetails(details);
                 } catch (error) {
                     console.error('Error fetching video details:', error);
                 } finally {
-                    // 数据加载完成后更新加载状态
                     setLoading(false);
                 }
-            };
+            }
+        };
 
-            fetchData();
-        }
-    }, [id]);
+        fetchData();
+    }, [id]);  // id 作为依赖，确保在 id 变化时重新触发
 
     return (
-        <div style={{ backgroundColor: '#333', color: '#fff', height: '100vh', padding: '20px' }}>
+        <div style={{ backgroundColor: '#333', color: '#fff', minHeight: '100vh', padding: '20px' }}>
             <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
                 <Link className="flex items-center gap-2 font-bold text-lg" href="#">
                     <FanIcon className="w-6 h-6" />

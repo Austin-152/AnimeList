@@ -61,18 +61,24 @@ interface VideoComponent {
 // 获取视频详情
 const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
     try {
+
         const response = await axios.post(`${BaseURL}/api/query/ole/detail`, { id });
 
-        const data = response.data; // 假设这个 data 是包含多个视频信息的数组
+        // 访问 response.data.data.urls 数组
+        const urls = response.data.data.urls;
 
-        // 确保 data 是数组，并且每个元素都有 title 和 url 字段
-        const videoDetails: VideoComponent[] = Array.isArray(data)
-            ? data.map((item: any,idx:number) => ({
-                title: item.title,
-                url: item.url,
-                index: idx+1
-            }))
-            : [];
+        if (!Array.isArray(urls)) {
+            throw new Error('Unexpected data structure: urls is not an array');
+        }
+
+        // 将 urls 数组映射为 VideoComponent 数组
+        const videoDetails: VideoComponent[] = urls.map((item: any, idx: number) => ({
+            title: item.title,
+            url: item.url,
+            index: idx + 1,
+        }));
+
+        console.log('Mapped video details:', videoDetails);
 
         return videoDetails;
     } catch (error) {
@@ -80,6 +86,7 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
         throw error;
     }
 };
+
 
 export type {VideoComponent};
 export { fetchVideoDetails };
