@@ -73,7 +73,7 @@ const VideoPage = () => {
                                 height: '100%',
                                 objectFit: 'cover',
                             }}
-                            src={currentVideoUrl}
+                            src={"https://player.viloud.tv/embed/play?url=" + currentVideoUrl}
                         />
                     ) : (
                         <button
@@ -105,7 +105,7 @@ const VideoPage = () => {
                             <li
                                 key={index}
                                 style={{padding: '10px 0', borderBottom: index < videoDetails.length - 1 ? '1px solid #444' : 'none'}}
-                                onClick={() => setCurrentVideoUrl(video.url)}  // 设置当前视频 URL
+                                onClick={() => setCurrentVideoUrl("https://player.viloud.tv/embed/play?url=" + video.url)}
                             >
                                 <a
                                     href="#"
