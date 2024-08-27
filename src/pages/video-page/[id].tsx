@@ -51,7 +51,7 @@ const VideoPage = () => {
                     <Link className="hover:underline" href="#">
                         Subscriptions
                     </Link>
-                    <Link href="/api/auth/login">
+                    <Link href={process.env.BaseURL + '/api/auth/login'}>
                         <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
                             Sign In
                         </Button>

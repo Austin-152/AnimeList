@@ -102,6 +102,8 @@ export function Index() {
   //   fetchSuggestions().then(r => console.log(r));
   // }, []);
 
+  const LoginURL = `${process.env.BaseURL}/api/auth/login`;
+
   // @ts-ignore
   return (
       <div className="flex flex-col min-h-screen">
@@ -117,7 +119,7 @@ export function Index() {
             <Link className="hover:underline" href="#">
               Subscriptions
             </Link>
-            <Link href="/api/auth/login">
+            <Link href={LoginURL}>
               <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
                 Sign In
               </Button>
