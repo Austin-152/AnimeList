@@ -26,7 +26,7 @@ import React, {useCallback, useState} from 'react';
 import { fetchSearchResults } from '@/app/api/api';
 import { Item } from "@/app/api/api";
 import { fetchKeywordSuggestions } from '@/app/api/api';
-// import "@/mockjs/index";//引入mockjs
+
 
 
 export function Index() {
@@ -176,7 +176,7 @@ export function Index() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {data.map((item) => (
                 <Card className="group" key={item.id}>
-                  <Link href={`https://www.olevod.tv/player/vod/${item.typeId1}-${item.id}-1.html`}>
+                  <Link href={`/video-page/${item.id}`}>
                     <img
                         alt={item.name}
                         className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"
@@ -193,136 +193,6 @@ export function Index() {
             ))}
           </div>
         </section>
-
-        {/*<section className="py-12 md:py-24 px-4 md:px-6">*/}
-        {/*  <div className="flex items-center justify-between mb-8">*/}
-        {/*    <h2 className="text-2xl md:text-3xl font-bold">Recently Added</h2>*/}
-        {/*    <Link className="text-sm md:text-base hover:underline" href="#">*/}
-        {/*      View all*/}
-        {/*    </Link>*/}
-        {/*  </div>*/}
-        {/*  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#">*/}
-        {/*        <img*/}
-        {/*          alt="Blue Lock"*/}
-        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
-        {/*          height="300"*/}
-        {/*          src="/placeholder.svg"*/}
-        {/*          width="200"*/}
-        {/*        />*/}
-        {/*        <div className="mt-4">*/}
-        {/*          <h3 className="text-lg font-bold">Blue Lock</h3>*/}
-        {/*          <p className="text-gray-400 text-sm">Sports, Drama</p>*/}
-        {/*        </div>*/}
-        {/*      </Link>*/}
-        {/*    </Card>*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#">*/}
-        {/*        <img*/}
-        {/*          alt="The Eminence in Shadow"*/}
-        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
-        {/*          height="300"*/}
-        {/*          src="/placeholder.svg"*/}
-        {/*          width="200"*/}
-        {/*        />*/}
-        {/*        <div className="mt-4">*/}
-        {/*          <h3 className="text-lg font-bold">The Eminence in Shadow</h3>*/}
-        {/*          <p className="text-gray-400 text-sm">Action, Comedy</p>*/}
-        {/*        </div>*/}
-        {/*      </Link>*/}
-        {/*    </Card>*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#">*/}
-        {/*        <img*/}
-        {/*          alt="Mob Psycho 100"*/}
-        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
-        {/*          height="300"*/}
-        {/*          src="/placeholder.svg"*/}
-        {/*          width="200"*/}
-        {/*        />*/}
-        {/*        <div className="mt-4">*/}
-        {/*          <h3 className="text-lg font-bold">Mob Psycho 100</h3>*/}
-        {/*          <p className="text-gray-400 text-sm">Action, Comedy, Supernatural</p>*/}
-        {/*        </div>*/}
-        {/*      </Link>*/}
-        {/*    </Card>*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#">*/}
-        {/*        <img*/}
-        {/*          alt="Bleach: Thousand-Year Blood War"*/}
-        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
-        {/*          height="300"*/}
-        {/*          src="/placeholder.svg"*/}
-        {/*          width="200"*/}
-        {/*        />*/}
-        {/*        <div className="mt-4">*/}
-        {/*          <h3 className="text-lg font-bold">Bleach: Thousand-Year Blood War</h3>*/}
-        {/*          <p className="text-gray-400 text-sm">Action, Supernatural</p>*/}
-        {/*        </div>*/}
-        {/*      </Link>*/}
-        {/*    </Card>*/}
-        {/*  </div>*/}
-        {/*</section>*/}
-
-        {/*<section className="py-12 md:py-24 px-4 md:px-6">*/}
-        {/*  <div className="flex items-center justify-between mb-8">*/}
-        {/*    <h2 className="text-2xl md:text-3xl font-bold">Anime Recommendations</h2>*/}
-        {/*    <Link className="text-sm md:text-base hover:underline" href="#">*/}
-        {/*      View all*/}
-        {/*    </Link>*/}
-        {/*  </div>*/}
-        {/*  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#">*/}
-        {/*        <img*/}
-        {/*          alt="One Piece"*/}
-        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
-        {/*          height="300"*/}
-        {/*          src="/placeholder.svg"*/}
-        {/*          width="200"*/}
-        {/*        />*/}
-        {/*        <div className="mt-4">*/}
-        {/*          <h3 className="text-lg font-bold">One Piece</h3>*/}
-        {/*          <p className="text-gray-400 text-sm">Action, Adventure, Fantasy</p>*/}
-        {/*        </div>*/}
-        {/*      </Link>*/}
-        {/*    </Card>*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#">*/}
-        {/*        <img*/}
-        {/*          alt="Naruto"*/}
-        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
-        {/*          height="300"*/}
-        {/*          src="/placeholder.svg"*/}
-        {/*          width="200"*/}
-        {/*        />*/}
-        {/*        <div className="mt-4">*/}
-        {/*          <h3 className="text-lg font-bold">Naruto</h3>*/}
-        {/*          <p className="text-gray-400 text-sm">Action, Adventure, Martial Arts</p>*/}
-        {/*        </div>*/}
-        {/*      </Link>*/}
-        {/*    </Card>*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#">*/}
-        {/*        <img*/}
-        {/*          alt="Dragon Ball Z"*/}
-        {/*          className="rounded-lg object-cover w-full aspect-[2/3] group-hover:opacity-80 transition-opacity"*/}
-        {/*          height="300"*/}
-        {/*          src="/placeholder.svg"*/}
-        {/*          width="200"*/}
-        {/*        />*/}
-        {/*        <div className="mt-4">*/}
-        {/*          <h3 className="text-lg font-bold">Dragon Ball Z</h3>*/}
-        {/*          <p className="text-gray-400 text-sm">Action, Adventure, Fantasy</p>*/}
-        {/*        </div>*/}
-        {/*      </Link>*/}
-        {/*    </Card>*/}
-        {/*    <Card className="group">*/}
-        {/*      <Link href="#" />*/}
-        {/*    </Card>*/}
-        {/*  </div>*/}
-        {/*</section>*/}
       </main>
     </div>
   )

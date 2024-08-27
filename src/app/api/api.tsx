@@ -9,14 +9,8 @@ interface Item {
     pic: string;
     blurb: string;
 }
-
-interface DataItem {
-    words: string[];
-}
-
 const BaseURL = process.env.BaseURL
 console.log('BaseURL:', BaseURL);
-
 // 定义一个异步函数 fetchSearchResults，用于获取搜索结果
 // 这个函数接受三个参数：keyword（关键词），page（页码，默认为1），size（每页的数量，默认为10）
 const fetchSearchResults = async (keyword: string, page="1", size=10) => {
@@ -37,7 +31,10 @@ const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     }
 };
 
-// 在 api.tsx 文件中添加
+interface DataItem {
+    words: string[];
+}
+// 关键词联想
 const fetchKeywordSuggestions = async (keyword: string) => {
     try {
         console.log(`Sending POST request to /api/query/keyword with keyword: ${keyword}`);
@@ -54,6 +51,38 @@ const fetchKeywordSuggestions = async (keyword: string) => {
         throw error;
     }
 };
+// 定义 VideoCommponent 类型
+interface VideoComponent {
+    title: string;
+    url: string;
+    index: number;
+}
+
+// 获取视频详情
+const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
+    try {
+        const response = await axios.post(`${BaseURL}/api/query/ole/detail`, { id });
+
+        const data = response.data; // 假设这个 data 是包含多个视频信息的数组
+
+        // 确保 data 是数组，并且每个元素都有 title 和 url 字段
+        const videoDetails: VideoComponent[] = Array.isArray(data)
+            ? data.map((item: any,idx:number) => ({
+                title: item.title,
+                url: item.url,
+                index: idx+1
+            }))
+            : [];
+
+        return videoDetails;
+    } catch (error) {
+        console.error('Error fetching video details:', error);
+        throw error;
+    }
+};
+
+export type {VideoComponent};
+export { fetchVideoDetails };
 
 export { fetchKeywordSuggestions };
 export { fetchSearchResults };
