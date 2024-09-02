@@ -3,6 +3,7 @@ import axios from 'axios';
 // 首先需要引入axios 如果没安装的话 在终端输入npm i axios 安装一下
 // 定义一个接口，描述你的数据对象的结构
 interface Item {
+    remarks: string;
     id: number;
     typeId1: number;
     name: string;
