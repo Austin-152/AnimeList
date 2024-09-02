@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import useSWR, { mutate } from 'swr';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -62,6 +62,8 @@ const fetcher = async (url: string) => {
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -85,6 +87,24 @@ export default function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -101,10 +121,10 @@ export default function Navbar() {
       </Link>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
         {userData?.data ? (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button onClick={toggleDropdown} className="flex items-center gap-2">
               <img
-                src={userData.data.picture || '/default-avatar.png'} // 使用默认头像或用户头像
+                src={userData.data.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // 使用默认头像或用户头像
                 alt="User Avatar"
                 className="w-8 h-8 rounded-full"
               />
@@ -120,8 +140,7 @@ export default function Navbar() {
                   <button
                       onClick={() => {
                         // window.location.assign('/settings');
-                        // 弹窗显示错误 功能开发中 敬请期待 用 tailwind 处理过的错误弹窗 而不是 alert
-                        alert("功能开发中 敬请期待");
+                        alert("功能暂未开放 敬请期待");
                       }}
                       className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
                   >
@@ -130,7 +149,7 @@ export default function Navbar() {
                   <button
                       onClick={() => {
                         // window.location.assign('/profile');
-                        alert("功能开发中 敬请期待");
+                        alert("功能暂未开放 敬请期待");
                       }}
                       className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
                   >
@@ -139,11 +158,11 @@ export default function Navbar() {
                   <button
                       onClick={() => {
                         // window.location.assign('/profile');
-                        alert("功能开发中 敬请期待");
+                        alert("功能暂未开放 敬请期待");
                       }}
                       className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
                   >
-                    设置推送令牌
+                    我的推送令牌
                   </button>
                   <button
                       onClick={() => {
