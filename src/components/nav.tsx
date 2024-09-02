@@ -75,7 +75,6 @@ export default function Navbar() {
     onSuccess: (data) => {
     },
     onError: (err) => {
-      console.error("Error fetching user data:", err);
     }
   });
 
