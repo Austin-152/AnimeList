@@ -235,10 +235,10 @@ export function Index() {
             h1 {
               animation: initialBounce 3s ease-in-out;
             }
-            //
-            //.animate-scroll {
-            //  animation: scroll 20s linear infinite;
-            //}
+
+            .animate-scroll {
+              animation: scroll 20s linear infinite;
+            }
           `}</style>
         </section>
 
