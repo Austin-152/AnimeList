@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { type LogtoContext } from '@logto/next';
-import useSWR from 'swr';
-import {useState} from "react";
+import useSWR, { mutate } from 'swr';
+import { useState, useEffect } from "react";
 
 function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -47,13 +46,52 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+const fetcher = async (url: string) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
+  }
+};
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const { data: userData } = useSWR<LogtoContext>('/api/logto/user');
+  const { data: userData, error } = useSWR('/api/getUserInfo', fetcher, {
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    shouldRetryOnError: true,
+    onSuccess: (data) => {
+      console.log("Successfully fetched user data:", data);
+    },
+    onError: (err) => {
+      console.error("Error fetching user data:", err);
+    }
+  });
+
+  useEffect(() => {
+    console.log("Navbar component mounted");
+    return () => {
+      console.log("Navbar component unmounted");
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const refreshUserData = () => {
+    mutate('/api/get-user-info');
+  };
 
   return (
     <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
@@ -62,22 +100,41 @@ export default function Navbar() {
         <span>Anime Hub</span>
       </Link>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
-        {userData?.isAuthenticated ? (
-          <p>
-            Hello, {userData.claims?.sub},
-            <button
-              onClick={() => {
-                window.location.assign('/api/logto/sign-out');
-              }}
-            >
-              Sign Out
+        {userData?.data ? (
+          <div className="relative">
+            <button onClick={toggleDropdown} className="flex items-center gap-2">
+              <img
+                src={userData.data.picture || '/default-avatar.png'} // 使用默认头像或用户头像
+                alt="User Avatar"
+                className="w-8 h-8 rounded-full"
+              />
+              <span>{userData.data.sub}</span>
             </button>
-          </p>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                <div className="p-4 border-b">
+                  <p className="text-sm text-gray-700">{userData.data.email}</p>
+                </div>
+                <div className="p-2">
+                  <button
+                    onClick={() => {
+                      window.location.assign('/api/logto/sign-out');
+                      refreshUserData(); // 手动刷新用户数据
+                    }}
+                    className="w-full text-left text-sm text-red-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         ) : (
           <p>
             <button className="text-white hover:bg-[#333]"
               onClick={() => {
                 window.location.assign('/api/logto/sign-in');
+                refreshUserData(); // 手动刷新用户数据
               }}
             >
               Sign In

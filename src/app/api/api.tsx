@@ -11,13 +11,10 @@ interface Item {
     blurb: string;
 }
 const BaseURL = process.env.BaseURL
-console.log('BaseURL:', BaseURL);
 // 定义一个异步函数 fetchSearchResults，用于获取搜索结果
 // 这个函数接受三个参数：keyword（关键词），page（页码，默认为1），size（每页的数量，默认为10）
 const fetchSearchResults = async (keyword: string, page="1", size=10) => {
     try {
-        // noq: no-console
-        console.log(`Sending POST request to https://testapi.tzpro.xyz/ with keyword: ${keyword}, page: ${page}, size: ${size}`);
         const response = await axios.post(`${BaseURL}/api/query/ole/search`, {
             keyword,
             page,
