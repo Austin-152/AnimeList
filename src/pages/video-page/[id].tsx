@@ -88,13 +88,12 @@ const VideoPage = () => {
                             <li
                                 key={index}
                                 style={{padding: '10px 0', borderBottom: index < videoDetails.length - 1 ? '1px solid #444' : 'none'}}
-                                onClick={() => setCurrentVideoUrl("https://player.viloud.tv/embed/play?url=" + video.url)}
+                                onClick={() => setCurrentVideoUrl(video.url)} // 设置视频url
                             >
                                 <a
                                     href="#"
                                     onClick={(e) => {
                                         e.preventDefault();  // 阻止默认的导航行为
-                                        setCurrentVideoUrl(video.url);  // 设置当前视频 URL
                                     }}
                                     style={{color: '#fff', textDecoration: 'none'}}
                                 >
