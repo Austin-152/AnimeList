@@ -1,10 +1,11 @@
 import LogtoClient from '@logto/next';
+import {env} from "eslint-config-next";
 
 export const logtoClient = new LogtoClient({
     endpoint: 'https://auth.tzpro.xyz/oidc/auth',
-    appId: '607i5yfqohw99j66f1p3a',
-    appSecret: '9zXP71NQN3D8goUXqHpG6eIyo9aFr7yn',
-    baseUrl: 'https://anime.tzpro.xyz', // Change to your own base URL
-    cookieSecret: 'bCmw8bo3gtSLrEurCkHQ0aOYnmFs9iso', // Auto-generated 32 digit secret
+    appId: env.LogtoAppId,
+    appSecret: env.LogtoAppSecret,
+    baseUrl: env.BaseURL,
+    cookieSecret: env.CookieSecret,
     cookieSecure: process.env.NODE_ENV === 'production',
 });
