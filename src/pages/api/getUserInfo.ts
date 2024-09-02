@@ -1,12 +1,41 @@
 import { logtoClient } from '@/lib/logto';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { IdTokenClaims } from '@logto/client';
 
-export default logtoClient.withLogtoApiRoute((request, response) => {
+interface CacheData {
+  data:  { data: IdTokenClaims | undefined; };
+  timestamp: number;
+}
+
+const cache: CacheData = {
+    data: { data: undefined },
+    timestamp: 0,
+};
+
+const CACHE_DURATION = 5 * 60 * 1000; // 缓存持续时间，单位为毫秒（5分钟）
+
+export default logtoClient.withLogtoApiRoute((request: NextApiRequest, response: NextApiResponse) => {
+  const now = Date.now();
+
+  // 检查缓存是否有效
+  if (cache.data && (now - cache.timestamp < CACHE_DURATION)) {
+    response.json(cache.data);
+    console.log('Returning cached data');
+    return;
+  }
+
   if (!request.user.isAuthenticated) {
     response.status(401).json({ message: 'Unauthorized' });
     return;
   }
 
-  response.json({
+  const responseData = {
     data: request.user.claims,
-  });
+  };
+
+  // 更新缓存
+  cache.data = responseData;
+  cache.timestamp = now;
+
+  response.json(responseData);
 });

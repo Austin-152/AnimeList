@@ -73,7 +73,6 @@ export default function Navbar() {
     revalidateOnReconnect: true,
     shouldRetryOnError: true,
     onSuccess: (data) => {
-      console.log("Successfully fetched user data:", data);
     },
     onError: (err) => {
       console.error("Error fetching user data:", err);
@@ -81,9 +80,9 @@ export default function Navbar() {
   });
 
   useEffect(() => {
-    console.log("Navbar component mounted");
+    // ComponentDidMount
     return () => {
-      console.log("Navbar component unmounted");
+      // ComponentWillUnmount
     };
   }, []);
 
@@ -110,7 +109,7 @@ export default function Navbar() {
   };
 
   const refreshUserData = () => {
-    mutate('/api/get-user-info');
+    mutate('/api/get-user-info').then();
   };
 
   return (
