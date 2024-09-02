@@ -6,7 +6,8 @@ dotenv.config();
 const nextConfig = {
   // load env
     env: {
-      BaseURL: process.env.NEXT_PUBLIC_BASE_URL,
+        BaseURL: process.env.NEXT_PUBLIC_BASE_URL,
+        LogtoCallback: (process.env.LOGTO_CALLBACK_URL || 'https://anime.tzpro.xyz'),
     }
 }
 
