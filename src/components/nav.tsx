@@ -114,14 +114,43 @@ export default function Navbar() {
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                 <div className="p-4 border-b">
                   <p className="text-sm text-gray-700">{userData.data.email}</p>
+                  <p className="text-sm text-gray-500">ID: {userData.data.sub}</p>
                 </div>
                 <div className="p-2">
                   <button
-                    onClick={() => {
-                      window.location.assign('/api/logto/sign-out');
-                      refreshUserData(); // 手动刷新用户数据
-                    }}
-                    className="w-full text-left text-sm text-red-600 hover:bg-gray-100 p-2 rounded"
+                      onClick={() => {
+                        // window.location.assign('/settings');
+                        // 弹窗显示错误 功能开发中 敬请期待 用 tailwind 处理过的错误弹窗 而不是 alert
+                        alert("功能开发中 敬请期待");
+                      }}
+                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    设置
+                  </button>
+                  <button
+                      onClick={() => {
+                        // window.location.assign('/profile');
+                        alert("功能开发中 敬请期待");
+                      }}
+                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    修改资料
+                  </button>
+                  <button
+                      onClick={() => {
+                        // window.location.assign('/profile');
+                        alert("功能开发中 敬请期待");
+                      }}
+                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    设置推送令牌
+                  </button>
+                  <button
+                      onClick={() => {
+                        window.location.assign('/api/logto/sign-out');
+                        refreshUserData(); // 手动刷新用户数据
+                      }}
+                      className="w-full text-left text-sm text-red-600 hover:bg-gray-100 p-2 rounded"
                   >
                     Sign Out
                   </button>
