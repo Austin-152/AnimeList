@@ -115,7 +115,7 @@ export default function Navbar() {
 
   return (
     <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
-      <Link className="flex items-center gap-2 font-bold text-lg" href="#">
+      <Link className="flex items-center gap-2 font-bold text-lg" href="/">
         <FanIcon className="w-6 h-6" />
         <span>Anime Hub</span>
       </Link>
