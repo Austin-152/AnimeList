@@ -38,7 +38,7 @@ export function Index() {
 
   const [data, setData] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const handleSearch = async (event?: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (event?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>) => {
     event?.preventDefault();
 
     try {
@@ -77,6 +77,12 @@ export function Index() {
       debouncedFetchSuggestions(newKeyword);
     } else {
       setSuggestions([]);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch(event);
     }
   };
 
@@ -124,7 +130,10 @@ export function Index() {
                 type="search"
                 value={keyword}
                 onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
               />
+
+              {/*联想搜索*/}
               {suggestions.length > 0 && (
                 <div
                   className="absolute top-full left-0 w-full bg-gray-800 border border-gray-700 divide-y divide-gray-700 rounded-lg mt-1 z-10">
