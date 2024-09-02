@@ -26,6 +26,8 @@ import React, {useCallback, useState} from 'react';
 import { fetchSearchResults } from '@/app/api/api';
 import { Item } from "@/app/api/api";
 import { fetchKeywordSuggestions } from '@/app/api/api';
+import { type LogtoContext } from '@logto/next';
+import useSWR from 'swr';
 
 
 
@@ -110,6 +112,7 @@ export function Index() {
 
 
   const LoginURL = `${process.env.BaseURL}/api/auth/login`;
+  const { data: userData } = useSWR<LogtoContext>('/api/logto/user');
 
   // @ts-ignore
   return (
@@ -120,17 +123,29 @@ export function Index() {
             <span>Anime Hub</span>
           </Link>
           <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
-            <Link className="hover:underline" href="#">
-              trending
-            </Link>
-            <Link className="hover:underline" href="#">
-              Subscriptions
-            </Link>
-            <Link href={LoginURL}>
-              <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
-                Sign In
-              </Button>
-            </Link>
+            {userData?.isAuthenticated ? (
+                <p>
+                  Hello, {userData.claims?.sub},
+
+                  <button
+                      onClick={() => {
+                        window.location.assign('/api/logto/sign-out');
+                      }}
+                  >
+                    Sign Out
+                  </button>
+                </p>
+            ) : (
+                <p>
+                  <button  className="text-white hover:bg-[#333]"
+                      onClick={() => {
+                        window.location.assign('/api/logto/sign-in');
+                      }}
+                  >
+                    Sign In
+                  </button>
+                </p>
+            )}
           </nav>
           <Button
               className="md:hidden"

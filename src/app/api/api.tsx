@@ -87,10 +87,27 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
     }
 };
 
+// 获取公钥
+const getPublicKey = async (): Promise<string> => {
+    try {
+        const res = await fetch(`${BaseURL}/api/crypto/get`);
+        const data = await res.json() as { status: string; public_key: string };
+
+        if (data.status !== 'success') {
+            throw new Error('Failed to fetch public key');
+        }
+
+        return data.public_key;
+    } catch (error) {
+        console.error('Error fetching public key:', error);
+        throw error;
+    }
+};
+
 
 export type {VideoComponent};
 export { fetchVideoDetails };
-
 export { fetchKeywordSuggestions };
 export { fetchSearchResults };
 export type { Item };
+export { getPublicKey };
