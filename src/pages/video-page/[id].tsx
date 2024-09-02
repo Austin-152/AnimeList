@@ -34,6 +34,11 @@ const VideoPage = () => {
 
         fetchData();
     }, [id]);  // id 作为依赖，确保在 id 变化时重新触发
+    const handlePlayButtonClick = () => {
+        if (videoDetails.length > 0) {
+            setCurrentVideoUrl(videoDetails[0].url);
+        }
+    };
 
     return (
         <div style={{ backgroundColor: '#333', color: '#fff', minHeight: '100vh', padding: '20px' }}>
@@ -63,7 +68,9 @@ const VideoPage = () => {
                                 border: 'none',
                                 color: '#fff',
                                 cursor: 'pointer',
+                                borderRadius: '8px', // 添加圆角
                             }}
+                            onClick={handlePlayButtonClick}
                         >
                             Play
                         </button>
