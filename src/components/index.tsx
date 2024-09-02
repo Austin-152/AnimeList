@@ -8,6 +8,7 @@ import { Item } from "@/app/api/api";
 import { fetchKeywordSuggestions } from '@/app/api/api';
 import { type LogtoContext } from '@logto/next';
 import useSWR from 'swr';
+import Navbar from './nav';
 
 export function Index() {
   useEffect(() => {
@@ -100,45 +101,7 @@ export function Index() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
-        <Link className="flex items-center gap-2 font-bold text-lg" href="#">
-          <FanIcon className="w-6 h-6" />
-          <span>Anime Hub</span>
-        </Link>
-        <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
-          {userData?.isAuthenticated ? (
-            <p>
-              Hello, {userData.claims?.sub},
-              <button
-                onClick={() => {
-                  window.location.assign('/api/logto/sign-out');
-                }}
-              >
-                Sign Out
-              </button>
-            </p>
-          ) : (
-            <p>
-              <button className="text-white hover:bg-[#333]"
-                onClick={() => {
-                  window.location.assign('/api/logto/sign-in');
-                }}
-              >
-                Sign In
-              </button>
-            </p>
-          )}
-        </nav>
-        <Button
-          className="md:hidden"
-          size="icon"
-          variant="ghost"
-          onClick={toggleMenu}
-        >
-          <MenuIcon className="w-6 h-6" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </header>
+      <Navbar />
       <main className="flex-1">
         <section
           className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
