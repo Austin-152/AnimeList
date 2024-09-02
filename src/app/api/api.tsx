@@ -44,9 +44,7 @@ const fetchKeywordSuggestions = async (keyword: string) => {
         });
 
         // Extract words from each item in the data array and flatten them into a single array
-        const suggestions = response.data.data.flatMap((item: DataItem) => item.words);
-
-        return suggestions;
+        return response.data.data.flatMap((item: DataItem) => item.words);
     } catch (error) {
         console.error('Error fetching keyword suggestions:', error);
         throw error;
@@ -69,7 +67,7 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
         const urls = response.data.data.urls;
 
         if (!Array.isArray(urls)) {
-            throw new Error('Unexpected data structure: urls is not an array');
+            console.error('Invalid response:', response.data);
         }
 
         // 将 urls 数组映射为 VideoComponent 数组
@@ -95,7 +93,7 @@ const getPublicKey = async (): Promise<string> => {
         const data = await res.json() as { status: string; public_key: string };
 
         if (data.status !== 'success') {
-            throw new Error('Failed to fetch public key');
+            console.error('Failed to fetch public key:', data);
         }
 
         return data.public_key;

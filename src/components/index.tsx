@@ -39,7 +39,6 @@ export function Index() {
   const [isLoading, setIsLoading] = useState(false);
   const handleSearch = async (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-    const keywords = event ? (event.currentTarget.elements[0] as HTMLInputElement).value : keyword;
 
     try {
       setIsLoading(true);
@@ -47,7 +46,7 @@ export function Index() {
       setSuggestions([]);
       const results = await fetchSearchResults(keyword, "1", 10);
       if (!Array.isArray(results.data)) {
-        throw new Error('fetchSearchResults did not return an array');
+        console.error("failed to fetch suggestion")
       }
 
       const data = results.data.reduce((acc: Item[], item: { list: Item[] | null }) => acc.concat(item.list || []), []);
@@ -198,6 +197,7 @@ export function Index() {
                     'https://s2.loli.net/2024/09/02/BbgRAQ8dVt9UmTn.png',
                     'https://s2.loli.net/2024/09/02/Yl6WpiEw5b2cOV1.png'
                   ].map((url, index) => (
+                      // eslint-disable-next-line @next/next/no-img-element
                     <img
                       key={index}
                       src={url}
@@ -235,10 +235,10 @@ export function Index() {
             h1 {
               animation: initialBounce 3s ease-in-out;
             }
-
-            .animate-scroll {
-              animation: scroll 20s linear infinite;
-            }
+            //
+            //.animate-scroll {
+            //  animation: scroll 20s linear infinite;
+            //}
           `}</style>
         </section>
 
