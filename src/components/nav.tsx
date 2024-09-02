@@ -108,7 +108,7 @@ export default function Navbar() {
                 alt="User Avatar"
                 className="w-8 h-8 rounded-full"
               />
-              <span>{userData.data.sub}</span>
+              <span>{userData.data.username}</span>
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
