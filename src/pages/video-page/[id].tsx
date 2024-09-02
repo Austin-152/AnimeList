@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import 'tailwindcss/tailwind.css';
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { FanIcon, MenuIcon } from "@/components";
 import { fetchVideoDetails } from "@/app/api/api";
 import type { VideoComponent } from "@/app/api/api";
+import Navbar from '@/components/nav';
 
 const VideoPage = () => {
     const router = useRouter();
@@ -39,29 +37,7 @@ const VideoPage = () => {
 
     return (
         <div style={{ backgroundColor: '#333', color: '#fff', minHeight: '100vh', padding: '20px' }}>
-            <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
-                <Link className="flex items-center gap-2 font-bold text-lg" href="/">
-                    <FanIcon className="w-6 h-6" />
-                    <span>Anime Hub</span>
-                </Link>
-                <nav className="hidden md:flex items-center gap-6">
-                    <Link className="hover:underline" href="#">
-                        trending
-                    </Link>
-                    <Link className="hover:underline" href="#">
-                        Subscriptions
-                    </Link>
-                    <Link href={process.env.BaseURL + '/api/auth/login'}>
-                        <Button className="bg-[#ff6b6b] text-white hover:bg-[#ff4d4d]">
-                            Sign In
-                        </Button>
-                    </Link>
-                </nav>
-                <Button className="md:hidden" size="icon" variant="ghost">
-                    <MenuIcon className="w-6 h-6" />
-                    <span className="sr-only">Toggle menu</span>
-                </Button>
-            </header>
+            <Navbar />
             <div style={{maxWidth: '800px', margin: '0 auto', marginTop: '20px'}}>
                 {/* 视频播放区域 */}
                 <div style={{backgroundColor: '#000', height: '450px', position: 'relative'}}>

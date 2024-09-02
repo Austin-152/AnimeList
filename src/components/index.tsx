@@ -44,7 +44,7 @@ export function Index() {
     try {
       setIsLoading(true);
       setData([]);
-      setSuggestions([]);
+      setSuggestions([]); // 清空联想搜索框
       const results = await fetchSearchResults(keyword, "1", 10);
       if (!Array.isArray(results.data)) {
         console.error("failed to fetch suggestion")
@@ -56,6 +56,7 @@ export function Index() {
       console.error('Error fetching search results:', error);
     } finally {
       setIsLoading(false);
+      setSuggestions([]); // 确保在搜索完成后清空联想搜索框
     }
   };
 
@@ -83,6 +84,7 @@ export function Index() {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       handleSearch(event);
+      setSuggestions([]); // 清空联想搜索框
     }
   };
 
