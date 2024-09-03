@@ -1,4 +1,6 @@
 // types.ts
+import 'tailwindcss/tailwind.css';
+
 export interface Item {
   id: number;
   typeId: number;

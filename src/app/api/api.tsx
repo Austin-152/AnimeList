@@ -26,7 +26,6 @@ const fetchSearchResults = async (keyword: string, page="1", size=10) => {
         // Return response.data.data instead of response.data
         return response.data.data;
     } catch (error) {
-        console.error('Error fetching search results:', error);
         throw error;
     }
 };
