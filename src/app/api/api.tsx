@@ -3,6 +3,8 @@ import axios from 'axios';
 // 首先需要引入axios 如果没安装的话 在终端输入npm i axios 安装一下
 // 定义一个接口，描述你的数据对象的结构
 interface Item {
+    hits: number;
+    picThumb: string;
     remarks: string;
     id: number;
     typeId1: number;
@@ -101,9 +103,24 @@ const getPublicKey = async (): Promise<string> => {
 };
 
 
+const fetchTrending = async (period: string, typeID: number) => {
+  try {
+    const response = await axios.post(`${BaseURL}/api/trending/${period}/trend`, {
+      params: {"typeID": typeID}
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching trending data:', error);
+    throw error;
+  }
+};
+
+
+
 export type {VideoComponent};
 export { fetchVideoDetails };
 export { fetchKeywordSuggestions };
 export { fetchSearchResults };
 export type { Item };
 export { getPublicKey };
+export { fetchTrending };
