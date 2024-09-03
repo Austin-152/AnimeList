@@ -112,91 +112,96 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
-      <Link className="flex items-center gap-2 font-bold text-lg" href="/">
-        <FanIcon className="w-6 h-6" />
-        <span>Anime Hub</span>
-      </Link>
-      <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
-        {userData?.data ? (
-          <div className="relative" ref={dropdownRef}>
-            <button onClick={toggleDropdown} className="flex items-center gap-2">
-              <img
-                src={userData.data.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // 使用默认头像或用户头像
-                alt="User Avatar"
-                className="w-8 h-8 rounded-full"
-              />
-              <span>{userData.data.username}</span>
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                <div className="p-4 border-b">
-                  <p className="text-sm text-gray-700">{userData.data.email}</p>
-                  <p className="text-sm text-gray-500">ID: {userData.data.sub}</p>
-                </div>
-                <div className="p-2">
-                  <button
-                      onClick={() => {
-                        // window.location.assign('/settings');
-                        alert("功能暂未开放 敬请期待");
-                      }}
-                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
-                  >
-                    设置
-                  </button>
-                  <button
-                      onClick={() => {
-                        // window.location.assign('/profile');
-                        alert("功能暂未开放 敬请期待");
-                      }}
-                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
-                  >
-                    修改资料
-                  </button>
-                  <button
-                      onClick={() => {
-                        // window.location.assign('/profile');
-                        alert("功能暂未开放 敬请期待");
-                      }}
-                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
-                  >
-                    我的推送令牌
-                  </button>
-                  <button
-                      onClick={() => {
-                        window.location.assign('/api/logto/sign-out');
-                        refreshUserData(); // 手动刷新用户数据
-                      }}
-                      className="w-full text-left text-sm text-red-600 hover:bg-gray-100 p-2 rounded"
-                  >
-                    Sign Out
-                  </button>
-                </div>
+      <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <Link className="flex items-center gap-2 font-bold text-lg" href="/">
+            <FanIcon className="w-6 h-6"/>
+            <span>Anime Hub</span>
+          </Link>
+          <Link href="/trending" className="text-white hover:bg-gray-700 rounded px-3 py-2">排行榜</Link>
+        </div>
+        <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
+          {userData?.data ? (
+              <div className="relative" ref={dropdownRef}>
+                <button onClick={toggleDropdown} className="flex items-center gap-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                      src={userData.data.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // 使用默认头像或用户头像
+                      alt="User Avatar"
+                      className="w-8 h-8 rounded-full"
+                  />
+                  <span>{userData.data.username}</span>
+                </button>
+                {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                      <div className="p-4 border-b">
+                        <p className="text-sm text-gray-700">{userData.data.email}</p>
+                        <p className="text-sm text-gray-500">ID: {userData.data.sub}</p>
+                      </div>
+                      <div className="p-2">
+                        <button
+                            onClick={() => {
+                              // window.location.assign('/settings');
+                              alert("功能暂未开放 敬请期待");
+                            }}
+                            className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                        >
+                          设置
+                        </button>
+                        <button
+                            onClick={() => {
+                              // window.location.assign('/profile');
+                              alert("功能暂未开放 敬请期待");
+                            }}
+                            className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                        >
+                          修改资料
+                        </button>
+                        <button
+                            onClick={() => {
+                              // window.location.assign('/profile');
+                              alert("功能暂未开放 敬请期待");
+                            }}
+                            className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                        >
+                          我的推送令牌
+                        </button>
+                        <button
+                            onClick={() => {
+                              window.location.assign('/api/logto/sign-out');
+                              refreshUserData(); // 手动刷新用户数据
+                            }}
+                            className="w-full text-left text-sm text-red-600 hover:bg-gray-100 p-2 rounded"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                )}
               </div>
-            )}
-          </div>
-        ) : (
-          <p>
-            <button className="text-white hover:bg-[#333]"
-              onClick={() => {
-                window.location.assign('/api/logto/sign-in');
-                refreshUserData(); // 手动刷新用户数据
-              }}
-            >
-              Sign In
-            </button>
-          </p>
-        )}
-      </nav>
-      <Button
-        className="md:hidden"
-        size="icon"
-        variant="ghost"
-        onClick={toggleMenu}
-      >
-        <MenuIcon className="w-6 h-6" />
-        <span className="sr-only">Toggle menu</span>
-      </Button>
-    </header>
-  );
+          ) : (
+              <p>
+                <button className="text-white hover:bg-[#333]"
+                        onClick={() => {
+                          window.location.assign('/api/logto/sign-in');
+                          refreshUserData(); // 手动刷新用户数据
+                        }}
+                >
+                  Sign In
+                </button>
+              </p>
+          )}
+        </nav>
+        <Button
+            className="md:hidden"
+            size="icon"
+            variant="ghost"
+            onClick={toggleMenu}
+        >
+          <MenuIcon className="w-6 h-6"/>
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+      </header>
+  )
+      ;
 }

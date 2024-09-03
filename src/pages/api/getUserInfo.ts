@@ -1,6 +1,7 @@
 import { logtoClient } from '@/lib/logto';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { IdTokenClaims } from '@logto/client';
+import {filterClaims,} from "@/utils/userInfoFilter";
 
 interface CacheData {
   data:  { data: IdTokenClaims | undefined; };
@@ -25,7 +26,7 @@ export default logtoClient.withLogtoApiRoute((request: NextApiRequest, response:
   }
 
   if (!request.user.isAuthenticated) {
-    response.status(401).json({ message: 'Unauthorized' });
+    response.status(401).json({message: 'Unauthorized'});
     return;
   }
 
@@ -37,5 +38,9 @@ export default logtoClient.withLogtoApiRoute((request: NextApiRequest, response:
   cache.data = responseData;
   cache.timestamp = now;
 
-  response.json(responseData);
-});
+
+  // 创建一个新的对象，拷贝所有未被删除的字段
+  const filteredClaims = filterClaims(request.user.claims);
+  return response.json(filteredClaims);
+}
+);
