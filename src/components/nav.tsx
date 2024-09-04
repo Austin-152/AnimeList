@@ -130,6 +130,9 @@ export default function Navbar() {
                       src={userData.data.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // 使用默认头像或用户头像
                       alt="User Avatar"
                       className="w-8 h-8 rounded-full"
+                        width={32}
+                        height={32}
+
                   />
                   <span>{userData.data.username}</span>
                 </button>

@@ -13,7 +13,29 @@ const nextConfig = {
         LogtoAppSecret: (process.env.LOGTO_APP_SECRET || '9zXP71NQN3D8goUXqHpG6eIyo9aFr7yn'),
         LogtoEndpoint: (process.env.LOGTO_ENDPOINT || 'https://auth.tzpro.xyz/oidc/auth'),
         CookieSecret: (process.env.COOKIE_SECRET || randomBytes(32).toString('hex')),
-    }
+    },
+    images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn-avatars.huggingface.co',
+        port: '',
+        pathname: '/v1/production/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        port: '',
+        pathname: '/u/** ',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.microsoft.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+},
 }
 
 export default nextConfig;

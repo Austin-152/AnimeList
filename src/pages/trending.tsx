@@ -23,6 +23,7 @@ import { Card } from "@/components/ui/card";
 import React, { useState, useEffect } from 'react';
 import { fetchTrending } from '@/app/api/api';
 import Navbar from '@/components/nav';
+import Image from "next/image";
 
 export default function Trending() {
   const [trendingMovies, setTrendingMovies] = useState<Item[]>([]);
@@ -84,7 +85,7 @@ export default function Trending() {
                   <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="relative">
                       {item.picThumb ? (
-                        <img
+                        <Image
                           alt={item.name}
                           className="object-cover w-full aspect-video"
                           src={`https://www.olevod.tv/${item.picThumb}`}
@@ -114,7 +115,7 @@ export default function Trending() {
                   <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="relative">
                       {item.picThumb ? (
-                        <img
+                        <Image
                           alt={item.name}
                           className="object-cover w-full aspect-video"
                           src={`https://www.olevod.tv/${item.picThumb}`}
@@ -144,7 +145,7 @@ export default function Trending() {
                   <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="relative">
                       {item.picThumb ? (
-                        <img
+                        <Image
                           alt={item.name}
                           className="object-cover w-full aspect-video"
                           src={`https://www.olevod.tv/${item.picThumb}`}
