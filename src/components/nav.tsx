@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import useSWR, { mutate } from 'swr';
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 
 function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -125,7 +126,7 @@ export default function Navbar() {
               <div className="relative" ref={dropdownRef}>
                 <button onClick={toggleDropdown} className="flex items-center gap-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                       src={userData.data.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // 使用默认头像或用户头像
                       alt="User Avatar"
                       className="w-8 h-8 rounded-full"

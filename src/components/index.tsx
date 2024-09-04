@@ -9,6 +9,18 @@ import { fetchKeywordSuggestions } from '@/app/api/api';
 import { type LogtoContext } from '@logto/next';
 import useSWR from 'swr';
 import Navbar from './nav';
+import Image from "next/image";
+import { SearchIcon } from "lucide-react";
+
+  const debounce = (func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
 
 export function Index() {
   useEffect(() => {
@@ -26,7 +38,7 @@ export function Index() {
     ];
 
     imageUrls.forEach((url) => {
-      const img = new Image();
+      const img = new window.Image(); // 使用 new 关键字
       img.src = url;
     });
   }, []);
@@ -38,6 +50,9 @@ export function Index() {
 
   const [data, setData] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [keyword, setKeyword] = useState<string>('');
+
   const handleSearch = async (event?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>) => {
     event?.preventDefault();
 
@@ -47,7 +62,7 @@ export function Index() {
       setSuggestions([]); // 清空联想搜索框
       const results = await fetchSearchResults(keyword, "1", 10);
       if (!Array.isArray(results.data)) {
-        console.error("failed to fetch suggestion")
+        console.error("failed to fetch suggestion");
       }
 
       const data = results.data.reduce((acc: Item[], item: { list: Item[] | null }) => acc.concat(item.list || []), []);
@@ -58,16 +73,6 @@ export function Index() {
       setIsLoading(false);
       setSuggestions([]); // 确保在搜索完成后清空联想搜索框
     }
-  };
-
-  const debounce = (func: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout;
-    return (...args: any[]) => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
   };
 
   const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,10 +98,8 @@ export function Index() {
     setSuggestions(newSuggestions);
   };
 
-  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 1000), []);
-
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [keyword, setKeyword] = useState<string>('');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 1000), [fetchSuggestions]);
 
   const handleSuggestionClick = (suggestion: string) => {
     setKeyword(suggestion);
@@ -106,6 +109,7 @@ export function Index() {
 
   const LoginURL = `${process.env.BaseURL}/api/auth/login`;
   const { data: userData } = useSWR<LogtoContext>('/api/logto/user');
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -171,13 +175,14 @@ export function Index() {
                     'https://s2.loli.net/2024/09/02/BbgRAQ8dVt9UmTn.png',
                     'https://s2.loli.net/2024/09/02/Yl6WpiEw5b2cOV1.png'
                   ].map((url, index) => (
-                      // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                      <Image
                       key={index}
                       src={url}
                       alt={`Anime Strip ${index + 1}`}
                       className="w-64"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      width={256} // 添加宽度
+                      height={144} // 添加高度
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                     />
                   ))}
                 </div>
@@ -225,10 +230,12 @@ export function Index() {
               <Card className="group" key={item.id}>
                 <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                   <div className="relative">
-                    <img
+                    <Image
                       alt={item.name}
                       className="object-cover w-full aspect-video"
                       src={`https://www.olevod.tv/${item.pic}`}
+                      width={400} // 添加宽度
+                      height={225} // 添加高度
                     />
                     <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4">
                       <h3 className="text-lg font-bold text-white mb-1">{item.name}</h3>
@@ -245,68 +252,3 @@ export function Index() {
     </div>
   );
 }
-
-function FanIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path
-        d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z"
-      />
-      <path d="M12 12v.01" />
-    </svg>
-  );
-}
-
-function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-export { FanIcon, MenuIcon, SearchIcon };
