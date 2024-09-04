@@ -21,7 +21,7 @@ export interface Item {
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import React, { useState, useEffect } from 'react';
-import { fetchTrending } from '@/app/api/api';
+import { fetchTrending, fetchTrendingV2 } from '@/app/api/api';
 import Navbar from '@/components/nav';
 import Image from "next/image";
 
@@ -32,10 +32,10 @@ export default function Trending() {
   const [trendingAnime, setTrendingAnime] = useState<Item[]>([]);
 
   useEffect(() => {
-    fetchTrending('week', 1).then(setTrendingMovies);
-    fetchTrending('week', 2).then(setTrendingTVShows);
-    fetchTrending('week', 3).then(setTrendingVarietyShows);
-    fetchTrending('week', 4).then(setTrendingAnime);
+    fetchTrendingV2(1).then(setTrendingMovies);
+    fetchTrendingV2(2).then(setTrendingTVShows);
+    fetchTrendingV2(3).then(setTrendingVarietyShows);
+    fetchTrendingV2(4).then(setTrendingAnime);
   }, []);
 
   return (
@@ -89,6 +89,9 @@ export default function Trending() {
                           alt={item.name}
                           className="object-cover w-full aspect-video"
                           src={`https://www.olevod.tv/${item.picThumb}`}
+                          // 384 x 560
+                            width={384}
+                            height={560}
                         />
                       ) : (
                         <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">
@@ -119,6 +122,8 @@ export default function Trending() {
                           alt={item.name}
                           className="object-cover w-full aspect-video"
                           src={`https://www.olevod.tv/${item.picThumb}`}
+                          width={384}
+                            height={560}
                         />
                       ) : (
                         <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">
@@ -149,6 +154,8 @@ export default function Trending() {
                           alt={item.name}
                           className="object-cover w-full aspect-video"
                           src={`https://www.olevod.tv/${item.picThumb}`}
+                            width={384}
+                            height={560}
                         />
                       ) : (
                         <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">

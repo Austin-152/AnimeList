@@ -117,7 +117,7 @@ const fetchTrending = async (period: string, typeID: number) => {
 
 const fetchTrendingV2 = async (typeID: number) => {
     try {
-        const response = await axios.post(`${BaseURL}/api/trending/v2}/{typeID}`, {
+        const response = await axios.post(`${BaseURL}/api/trending/v2/${typeID}`, {
         });
         return response.data.data;
     } catch (error) {
@@ -135,3 +135,4 @@ export { fetchSearchResults };
 export type { Item };
 export { getPublicKey };
 export { fetchTrending };
+export { fetchTrendingV2 };
