@@ -14,7 +14,8 @@ const nextConfig = {
         LogtoEndpoint: (process.env.LOGTO_ENDPOINT || 'https://auth.tzpro.xyz/oidc/auth'),
         CookieSecret: (process.env.COOKIE_SECRET || randomBytes(32).toString('hex')),
     },
-    images: {
+images: {
+          unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -36,6 +37,7 @@ const nextConfig = {
       },
     ],
 },
+
 }
 
 export default nextConfig;
