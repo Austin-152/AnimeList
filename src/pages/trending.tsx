@@ -7,6 +7,7 @@ export interface Item {
   typeId1: number;
   name: string;
   picThumb?: string;
+  pic?: string;
   blurb: string;
   remarks?: string;
   vip: boolean;
@@ -54,11 +55,14 @@ export default function Trending() {
                 <Card className="group" key={item.id}>
                   <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="relative">
-                      {item.picThumb ? (
-                        <img
+                      {item.pic ? (
+                        <Image
                           alt={item.name}
                           className="object-cover w-full aspect-video"
-                          src={`https://www.olevod.tv/${item.picThumb}`}
+                          src={`https://www.olevod.tv/${item.pic}`}
+                            // 384 x 560
+                                width={384}
+                                height={560}
                         />
                       ) : (
                         <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">
@@ -84,11 +88,11 @@ export default function Trending() {
                 <Card className="group" key={item.id}>
                   <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="relative">
-                      {item.picThumb ? (
+                      {item.pic ? (
                         <Image
                           alt={item.name}
                           className="object-cover w-full aspect-video"
-                          src={`https://www.olevod.tv/${item.picThumb}`}
+                          src={`https://www.olevod.tv/${item.pic}`}
                           // 384 x 560
                             width={384}
                             height={560}
@@ -117,11 +121,11 @@ export default function Trending() {
                 <Card className="group" key={item.id}>
                   <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="relative">
-                      {item.picThumb ? (
+                      {item.pic ? (
                         <Image
                           alt={item.name}
                           className="object-cover w-full aspect-video"
-                          src={`https://www.olevod.tv/${item.picThumb}`}
+                          src={`https://www.olevod.tv/${item.pic}`}
                           width={384}
                             height={560}
                         />
@@ -149,11 +153,11 @@ export default function Trending() {
                 <Card className="group" key={item.id}>
                   <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div className="relative">
-                      {item.picThumb ? (
+                      {item.pic ? (
                         <Image
                           alt={item.name}
                           className="object-cover w-full aspect-video"
-                          src={`https://www.olevod.tv/${item.picThumb}`}
+                          src={`https://www.olevod.tv/${item.pic}`}
                             width={384}
                             height={560}
                         />
