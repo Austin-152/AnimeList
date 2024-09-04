@@ -1,5 +1,6 @@
 // 导入 axios 库，用于发送 HTTP 请求
 import axios from 'axios';
+import {Optional} from "@silverhand/essentials";
 // 首先需要引入axios 如果没安装的话 在终端输入npm i axios 安装一下
 // 定义一个接口，描述你的数据对象的结构
 interface Item {
@@ -115,7 +116,7 @@ const fetchTrending = async (period: string, typeID: number) => {
 };
 
 
-const fetchTrendingV2 = async (typeID: number) => {
+const fetchTrendingV2 = async (typeID: number, count: Optional<number> = 10) => {
     try {
         const response = await axios.post(`${BaseURL}/api/trending/v2/${typeID}`, {
         });

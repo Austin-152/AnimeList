@@ -1,30 +1,12 @@
-// types.ts
-import 'tailwindcss/tailwind.css';
-
-export interface Item {
-  id: number;
-  typeId: number;
-  typeId1: number;
-  name: string;
-  picThumb?: string;
-  pic?: string;
-  blurb: string;
-  remarks?: string;
-  vip: boolean;
-  new: boolean;
-  hits: number;
-  area: string;
-  year: string;
-  preFree: number;
-}
-
 // pages/trending.tsx
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import React, { useState, useEffect } from 'react';
-import { fetchTrending, fetchTrendingV2 } from '@/app/api/api';
+import {fetchTrending, fetchTrendingV2, Item} from '@/app/api/api';
 import Navbar from '@/components/nav';
 import Image from "next/image";
+// tailwind
+import 'tailwindcss/tailwind.css';
 
 export default function Trending() {
   const [trendingMovies, setTrendingMovies] = useState<Item[]>([]);
@@ -40,32 +22,40 @@ export default function Trending() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
       <main className="flex-1">
         <section className="py-12 md:py-24 px-4 md:px-6">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-center w-full">排行榜</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-center w-full tracking-wide text-gray-800">
+              排行榜
+            </h2>
           </div>
 
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-4">电影</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* Movies Section */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2 mb-6">
+              <h3 className="text-2xl font-semibold text-gray-700">电影</h3>
+              <div className="h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 w-24"></div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto px-4 lg:max-w-4xl">
               {trendingMovies.map((item) => (
                 <Card className="group" key={item.id}>
-                  <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="relative">
+                  <Link
+                    href={`/video-page/${item.id}`}
+                    className="block overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
+                  >
+                    <div className="relative h-80 w-full">
                       {item.pic ? (
                         <Image
                           alt={item.name}
-                          className="object-cover w-full aspect-video"
+                          className="object-cover w-full h-full rounded-t-lg"
                           src={`https://www.olevod.tv/${item.pic}`}
-                            // 384 x 560
-                                width={384}
-                                height={560}
+                          layout="fill"
+                          objectFit="cover"
                         />
                       ) : (
-                        <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">
+                        <div className="bg-gray-800 w-full h-full flex items-center justify-center text-gray-500">
                           No Image
                         </div>
                       )}
@@ -81,24 +71,30 @@ export default function Trending() {
             </div>
           </div>
 
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-4">电视剧</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* TV Shows Section */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2 mb-6">
+              <h3 className="text-2xl font-semibold text-gray-700">电视剧</h3>
+              <div className="h-0.5 bg-gradient-to-r from-green-500 to-teal-500 w-24"></div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto px-4 lg:max-w-4xl">
               {trendingTVShows.map((item) => (
                 <Card className="group" key={item.id}>
-                  <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="relative">
+                  <Link
+                    href={`/video-page/${item.id}`}
+                    className="block overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
+                  >
+                    <div className="relative h-80 w-full">
                       {item.pic ? (
                         <Image
                           alt={item.name}
-                          className="object-cover w-full aspect-video"
+                          className="object-cover w-full h-full rounded-t-lg"
                           src={`https://www.olevod.tv/${item.pic}`}
-                          // 384 x 560
-                            width={384}
-                            height={560}
+                          layout="fill"
+                          objectFit="cover"
                         />
                       ) : (
-                        <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">
+                        <div className="bg-gray-800 w-full h-full flex items-center justify-center text-gray-500">
                           No Image
                         </div>
                       )}
@@ -114,23 +110,30 @@ export default function Trending() {
             </div>
           </div>
 
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-4">综艺</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* Variety Shows Section */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2 mb-6">
+              <h3 className="text-2xl font-semibold text-gray-700">综艺</h3>
+              <div className="h-0.5 bg-gradient-to-r from-pink-500 to-red-500 w-24"></div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto px-4 lg:max-w-4xl">
               {trendingVarietyShows.map((item) => (
                 <Card className="group" key={item.id}>
-                  <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="relative">
+                  <Link
+                    href={`/video-page/${item.id}`}
+                    className="block overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
+                  >
+                    <div className="relative h-80 w-full">
                       {item.pic ? (
                         <Image
                           alt={item.name}
-                          className="object-cover w-full aspect-video"
+                          className="object-cover w-full h-full rounded-t-lg"
                           src={`https://www.olevod.tv/${item.pic}`}
-                          width={384}
-                            height={560}
+                          layout="fill"
+                          objectFit="cover"
                         />
                       ) : (
-                        <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">
+                        <div className="bg-gray-800 w-full h-full flex items-center justify-center text-gray-500">
                           No Image
                         </div>
                       )}
@@ -146,28 +149,35 @@ export default function Trending() {
             </div>
           </div>
 
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-4">动漫</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* Anime Section */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2 mb-6">
+              <h3 className="text-2xl font-semibold text-gray-700">动漫</h3>
+              <div className="h-0.5 bg-gradient-to-r from-yellow-500 to-orange-500 w-24"></div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto px-4 lg:max-w-4xl">
               {trendingAnime.map((item) => (
                 <Card className="group" key={item.id}>
-                  <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="relative">
+                  <Link
+                    href={`/video-page/${item.id}`}
+                    className="block overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
+                  >
+                    <div className="relative h-80 w-full">
                       {item.pic ? (
                         <Image
                           alt={item.name}
-                          className="object-cover w-full aspect-video"
+                          className="object-cover w-full h-full rounded-t-lg"
                           src={`https://www.olevod.tv/${item.pic}`}
-                            width={384}
-                            height={560}
+                          layout="fill"
+                          objectFit="cover"
                         />
                       ) : (
-                        <div className="bg-gray-800 w-full aspect-video flex items-center justify-center text-gray-500">
+                        <div className="bg-gray-800 w-full h-full flex items-center justify-center text-gray-500">
                           No Image
                         </div>
                       )}
                       <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4">
-                        <h3 className="text-lg font-bold text-white mb-1">{item.name}</h3>
+                                                <h3 className="text-lg font-bold text-white mb-1">{item.name}</h3>
                         <p className="text-gray-200 text-sm mb-2">{item.blurb || '暂无简介'}</p>
                         <p className="text-gray-400 text-xs">热度: {item.hits}</p>
                       </div>
@@ -182,3 +192,4 @@ export default function Trending() {
     </div>
   );
 }
+
