@@ -31,6 +31,32 @@ const debounce = (func: Function, delay: number): (arg0: string) => any => {
  * @static
  */
 export function Index() {
+    /**
+   * 预加载图片 useEffect组件 在组件挂载后加载图片
+   */
+  useEffect(() => {
+    const imageUrls = [
+      'https://s2.loli.net/2024/09/02/1HJGwBEmPztjuqV.png',
+      'https://s2.loli.net/2024/09/02/KzLYndJyPIuZeNX.png',
+      'https://s2.loli.net/2024/09/02/H6xcZrlyU3YG4hg.png',
+      'https://s2.loli.net/2024/09/02/P5EuMjwSD8YNc3V.png',
+      'https://s2.loli.net/2024/09/02/I2Ds8ectFn4dmrq.png',
+      'https://s2.loli.net/2024/09/02/Fknt4aT2dGrUJyA.png',
+      'https://s2.loli.net/2024/09/02/aWtusRi7fIZ58DH.png',
+      'https://s2.loli.net/2024/09/02/dDUSTu83tYBclsM.png',
+      'https://s2.loli.net/2024/09/02/BbgRAQ8dVt9UmTn.png',
+      'https://s2.loli.net/2024/09/02/Yl6WpiEw5b2cOV1.png'
+    ];
+
+    imageUrls.forEach((url) => {
+      const img = new window.Image();
+      img.src = url;
+    });
+  }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [data, setData] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(false);
