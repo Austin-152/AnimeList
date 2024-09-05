@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import useSWR, { mutate } from 'swr';
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
+/**
+ * SVG Fan Icon component.
+ * @param {React.SVGProps<SVGSVGElement>} props - SVG properties.
+ * @returns {JSX.Element} The SVG element.
+ */
 function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -26,6 +31,11 @@ function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+/**
+ * SVG Menu Icon component.
+ * @param {React.SVGProps<SVGSVGElement>} props - SVG properties.
+ * @returns {JSX.Element} The SVG element.
+ */
 function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -47,6 +57,11 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+/**
+ * Fetcher function for SWR.
+ * @param {string} url - API endpoint.
+ * @returns {Promise<any>} The fetched data.
+ */
 const fetcher = async (url: string) => {
   try {
     const response = await fetch(url);
@@ -60,6 +75,20 @@ const fetcher = async (url: string) => {
   }
 };
 
+/**
+ * Custom hook to refresh user data.
+ * @returns {Function} Function to refresh user data.
+ */
+function useRefreshUserData() {
+  return () => {
+    mutate('/api/get-user-info').then();
+  };
+}
+
+/**
+ * Navbar component.
+ * @returns {JSX.Element} The Navbar element.
+ */
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -69,21 +98,15 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Fetch user data using SWR
   const { data: userData, error } = useSWR('/api/getUserInfo', fetcher, {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
     shouldRetryOnError: true,
-    onSuccess: (data) => {
-    },
-    onError: (err) => {
-    }
   });
 
   useEffect(() => {
-    // ComponentDidMount
-    return () => {
-      // ComponentWillUnmount
-    };
+    return () => {};
   }, []);
 
   useEffect(() => {
@@ -108,104 +131,96 @@ export default function Navbar() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const refreshUserData = () => {
-    mutate('/api/get-user-info').then();
-  };
+  const refreshUserData = useRefreshUserData();
 
   return (
-      <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link className="flex items-center gap-2 font-bold text-lg" href="/">
-            <FanIcon className="w-6 h-6"/>
-            <span>Anime Hub</span>
-          </Link>
-          <Link href="/trending" className="text-white hover:bg-gray-700 rounded px-3 py-2">排行榜</Link>
-        </div>
-        <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
-          {userData?.data ? (
-              <div className="relative" ref={dropdownRef}>
-                <button onClick={toggleDropdown} className="flex items-center gap-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <Image
-                      src={userData.data.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // 使用默认头像或用户头像
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full"
-                        width={32}
-                        height={32}
-
-                  />
-                  <span>{userData.data.username}</span>
-                </button>
-                {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                      <div className="p-4 border-b">
-                        <p className="text-sm text-gray-700">{userData.data.email}</p>
-                        <p className="text-sm text-gray-500">ID: {userData.data.sub}</p>
-                      </div>
-                      <div className="p-2">
-                        <button
-                            onClick={() => {
-                              // window.location.assign('/settings');
-                              alert("功能暂未开放 敬请期待");
-                            }}
-                            className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
-                        >
-                          设置
-                        </button>
-                        <button
-                            onClick={() => {
-                              // window.location.assign('/profile');
-                              alert("功能暂未开放 敬请期待");
-                            }}
-                            className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
-                        >
-                          修改资料
-                        </button>
-                        <button
-                            onClick={() => {
-                              // window.location.assign('/profile');
-                              alert("功能暂未开放 敬请期待");
-                            }}
-                            className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
-                        >
-                          我的推送令牌
-                        </button>
-                        <button
-                            onClick={() => {
-                              window.location.assign('/api/logto/sign-out');
-                              refreshUserData(); // 手动刷新用户数据
-                            }}
-                            className="w-full text-left text-sm text-red-600 hover:bg-gray-100 p-2 rounded"
-                        >
-                          Sign Out
-                        </button>
-                      </div>
-                    </div>
-                )}
+    <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
+      <div className="flex items-center gap-6">
+        <Link className="flex items-center gap-2 font-bold text-lg" href="/">
+          <FanIcon className="w-6 h-6" />
+          <span>Anime Hub</span>
+        </Link>
+        <Link href="/trending" className="text-white hover:bg-gray-700 rounded px-3 py-2">排行榜</Link>
+      </div>
+      <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
+        {userData && !error ? (
+          <div className="relative" ref={dropdownRef}>
+            <button onClick={toggleDropdown} className="flex items-center gap-2">
+              <Image
+                src={userData.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // Use default or user avatar
+                alt="User Avatar"
+                className="w-8 h-8 rounded-full"
+                width={32}
+                height={32}
+              />
+              <span>{userData.username}</span>
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10">
+                <div className="p-4 border-b">
+                  <p className="text-sm text-gray-700">{userData.name}</p>
+                  <p className="text-sm text-gray-500">ID: {userData.sub}</p>
+                </div>
+                <div className="p-2">
+                  <button
+                    onClick={() => {
+                      alert("功能暂未开放 敬请期待");
+                    }}
+                    className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    设置
+                  </button>
+                  <button
+                    onClick={() => {
+                      alert("功能暂未开放 敬请期待");
+                    }}
+                    className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    修改资料
+                  </button>
+                  <button
+                    onClick={() => {
+                      alert("功能暂未开放 敬请期待");
+                    }}
+                    className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    我的推送令牌
+                  </button>
+                  <button
+                    onClick={() => {
+                      window.location.assign('/api/logto/sign-out');
+                      refreshUserData(); // Manually refresh user data
+                    }}
+                    className="w-full text-left text-sm text-red-600 hover:bg-gray-100 p-2 rounded"
+                  >
+                    Sign Out
+                  </button>
+                </div>
               </div>
-          ) : (
-              <p>
-                <button className="text-white hover:bg-[#333]"
-                        onClick={() => {
-                          window.location.assign('/api/logto/sign-in');
-                          refreshUserData(); // 手动刷新用户数据
-                        }}
-                >
-                  Sign In
-                </button>
-              </p>
-          )}
-        </nav>
-        <Button
-            className="md:hidden"
-            size="icon"
-            variant="ghost"
-            onClick={toggleMenu}
-        >
-          <MenuIcon className="w-6 h-6"/>
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </header>
-  )
-      ;
+            )}
+          </div>
+        ) : (
+          <p>
+            <button className="text-white hover:bg-[#333]"
+              onClick={() => {
+                window.location.assign('/api/logto/sign-in');
+                refreshUserData(); // Manually refresh user data
+              }}
+            >
+              Sign In
+            </button>
+          </p>
+        )}
+      </nav>
+      <Button
+        className="md:hidden"
+        size="icon"
+        variant="ghost"
+        onClick={toggleMenu}
+      >
+        <MenuIcon className="w-6 h-6" />
+        <span className="sr-only">Toggle menu</span>
+      </Button>
+    </header>
+  );
 }

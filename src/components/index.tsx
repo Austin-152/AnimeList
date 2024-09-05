@@ -12,7 +12,14 @@ import Image from "next/image";
 import { SearchIcon } from "lucide-react";
 import TrendingList from '@/components/trends';
 
-const debounce = (func: Function, delay: number) => {
+/**
+ * 防抖函数 - 防止用户在输入时频繁请求
+ * @param func
+ * @param delay
+ * @returns {function(...[*]=)}
+ * @see https://davidwalsh.name/javascript-debounce-function
+ */
+const debounce = (func: Function, delay: number): (arg0: string) => any => {
   let timeoutId: NodeJS.Timeout;
   return (...args: any[]) => {
     if (timeoutId) clearTimeout(timeoutId);
@@ -22,7 +29,15 @@ const debounce = (func: Function, delay: number) => {
   };
 };
 
+/**
+ * 首页组件
+ * @constructor
+ * @static
+ */
 export function Index() {
+  /**
+   * 预加载图片 useEffect组件 在组件挂载后加载图片
+   */
   useEffect(() => {
     const imageUrls = [
       'https://s2.loli.net/2024/09/02/1HJGwBEmPztjuqV.png',
@@ -110,6 +125,7 @@ export function Index() {
     setSuggestions(newSuggestions);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 1000), [fetchSuggestions]);
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -121,6 +137,7 @@ export function Index() {
   const LoginURL = `${process.env.BaseURL}/api/auth/login`;
   const { data: userData } = useSWR<LogtoContext>('/api/logto/user');
 
+  // noinspection CssUnusedSymbol
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
