@@ -1,23 +1,19 @@
-// pages/index.tsx
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import React, { useCallback, useState, useEffect } from 'react';
 import { fetchSearchResults, fetchTrendingV2, fetchKeywordSuggestions, Item } from '@/app/api/api';
-import { type LogtoContext } from '@logto/next';
 import useSWR from 'swr';
 import Navbar from './nav';
 import Image from "next/image";
 import { SearchIcon } from "lucide-react";
 import TrendingList from '@/components/trends';
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
 /**
  * 防抖函数 - 防止用户在输入时频繁请求
  * @param func
  * @param delay
  * @returns {function(...[*]=)}
- * @see https://davidwalsh.name/javascript-debounce-function
  */
 const debounce = (func: Function, delay: number): (arg0: string) => any => {
   let timeoutId: NodeJS.Timeout;
@@ -35,38 +31,12 @@ const debounce = (func: Function, delay: number): (arg0: string) => any => {
  * @static
  */
 export function Index() {
-  /**
-   * 预加载图片 useEffect组件 在组件挂载后加载图片
-   */
-  useEffect(() => {
-    const imageUrls = [
-      'https://s2.loli.net/2024/09/02/1HJGwBEmPztjuqV.png',
-      'https://s2.loli.net/2024/09/02/KzLYndJyPIuZeNX.png',
-      'https://s2.loli.net/2024/09/02/H6xcZrlyU3YG4hg.png',
-      'https://s2.loli.net/2024/09/02/P5EuMjwSD8YNc3V.png',
-      'https://s2.loli.net/2024/09/02/I2Ds8ectFn4dmrq.png',
-      'https://s2.loli.net/2024/09/02/Fknt4aT2dGrUJyA.png',
-      'https://s2.loli.net/2024/09/02/aWtusRi7fIZ58DH.png',
-      'https://s2.loli.net/2024/09/02/dDUSTu83tYBclsM.png',
-      'https://s2.loli.net/2024/09/02/BbgRAQ8dVt9UmTn.png',
-      'https://s2.loli.net/2024/09/02/Yl6WpiEw5b2cOV1.png'
-    ];
-
-    imageUrls.forEach((url) => {
-      const img = new window.Image();
-      img.src = url;
-    });
-  }, []);
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   const [data, setData] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>('');
+  const [isComposing, setIsComposing] = useState(false);
 
   const [trendingMovies, setTrendingMovies] = useState<Item[]>([]);
   const [trendingTVShows, setTrendingTVShows] = useState<Item[]>([]);
@@ -102,14 +72,32 @@ export function Index() {
     }
   };
 
-  const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const fetchSuggestions = async (keyword: string) => {
+    const newSuggestions = await fetchKeywordSuggestions(keyword);
+    setSuggestions(newSuggestions);
+  };
+
+  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 1000), []);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newKeyword = event.target.value;
     setKeyword(newKeyword);
 
-    if (newKeyword) {
+    if (!isComposing && newKeyword) {
       debouncedFetchSuggestions(newKeyword);
     } else {
       setSuggestions([]);
+    }
+  };
+
+  const handleCompositionStart = () => {
+    setIsComposing(true);
+  };
+
+  const handleCompositionEnd = () => {
+    setIsComposing(false);
+    if (keyword) {
+      debouncedFetchSuggestions(keyword);
     }
   };
 
@@ -120,14 +108,6 @@ export function Index() {
     }
   };
 
-  const fetchSuggestions = async (keyword: string) => {
-    const newSuggestions = await fetchKeywordSuggestions(keyword);
-    setSuggestions(newSuggestions);
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 1000), [fetchSuggestions]);
-
   const handleSuggestionClick = (suggestion: string) => {
     setKeyword(suggestion);
     setSuggestions([]);
@@ -135,15 +115,13 @@ export function Index() {
   };
 
   const LoginURL = `${process.env.BaseURL}/api/auth/login`;
-  const { data: userData } = useSWR<LogtoContext>('/api/logto/user');
+  const { data: userData } = useSWR('/api/logto/user');
 
-  // noinspection CssUnusedSymbol
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1">
-        <section
-          className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
+        <section className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
           <h1
             className="text-4xl md:text-6xl font-bold tracking-tighter"
             onMouseEnter={(e) => e.currentTarget.classList.add('animate-bounce')}
@@ -164,12 +142,12 @@ export function Index() {
                 value={keyword}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
               />
 
-              {/*联想搜索*/}
               {suggestions.length > 0 && (
-                <div
-                  className="absolute top-full left-0 w-full bg-gray-800 border border-gray-700 divide-y divide-gray-700 rounded-lg mt-1 z-10">
+                <div className="absolute top-full left-0 w-full bg-gray-800 border border-gray-700 divide-y divide-gray-700 rounded-lg mt-1 z-10">
                   {suggestions.map((suggestion, index) => (
                     <div
                       key={index}
@@ -202,7 +180,7 @@ export function Index() {
                     'https://s2.loli.net/2024/09/02/BbgRAQ8dVt9UmTn.png',
                     'https://s2.loli.net/2024/09/02/Yl6WpiEw5b2cOV1.png'
                   ].map((url, index) => (
-                      <Image
+                    <Image
                       key={index}
                       src={url}
                       alt={`Anime Strip ${index + 1}`}
