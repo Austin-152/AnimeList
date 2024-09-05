@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css';
 import { fetchVideoDetails } from "@/app/api/api";
 import type { VideoComponent } from "@/app/api/api";
 import Navbar from '@/components/nav';
+import Footer from '@/components/footer';
 
 const VideoPage = () => {
     const router = useRouter();
@@ -104,6 +105,7 @@ const VideoPage = () => {
                     </ul>
                 )}
             </div>
+            <Footer />
         </div>
     );
 }
