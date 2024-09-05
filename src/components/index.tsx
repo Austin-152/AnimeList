@@ -1,8 +1,7 @@
-// pages/index.tsx
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+// import Link from "next/link";
+// import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+// import { Card } from "@/components/ui/card";
 import React, { useCallback, useState, useEffect } from 'react';
 import { fetchSearchResults, fetchTrendingV2, fetchKeywordSuggestions, Item } from '@/app/api/api';
 import { type LogtoContext } from '@logto/next';
@@ -11,6 +10,7 @@ import Navbar from './nav';
 import Image from "next/image";
 import { SearchIcon } from "lucide-react";
 import TrendingList from '@/components/trends';
+import SearchResults from '@/components/SearchResult';
 
 /**
  * 防抖函数 - 防止用户在输入时频繁请求
@@ -247,40 +247,17 @@ export function Index() {
             }
           `}</style>
         </section>
-
+        {/*使用 SearchResults 组件展示搜索结果*/}
         {data.length > 0 ? (
-          <section className="py-12 md:py-24 px-4 md:px-6">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-center w-full">Search Results</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {data.map((item) => (
-                <Card className="group" key={item.id}>
-                  <Link href={`/video-page/${item.id}`} className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="relative">
-                      <Image
-                        alt={item.name}
-                        className="object-cover w-full aspect-video"
-                        src={`https://www.olevod.tv/${item.pic}`}
-                        width={400}
-                        height={225}
-                      />
-                      <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4">
-                        <h3 className="text-lg font-bold text-white mb-1">{item.name}</h3>
-                        <p className="text-gray-200 text-sm mb-2">{item.blurb || '暂无简介'}</p>
-                        <p className="text-gray-400 text-xs">更新至 {item.remarks.replace('更新至', '') || '未知集数'}</p>
-                      </div>
-                    </div>
-                  </Link>
-                </Card>
-              ))}
-            </div>
-          </section>
+            <section className="py-6 px-4 md:px-6">
+              <h2 className="text-2xl font-bold text-gray-50 mb-6">Search Results</h2>
+              <SearchResults data={data}/>
+            </section>
         ) : (
-          <section className="py-12 md:py-24 px-4 md:px-6">
-            <div className="text-center text-gray-500">
-              <svg
-                className="mx-auto mb-4 w-12 h-12 text-gray-400"
+            <section className="py-12 md:py-24 px-4 md:px-6">
+              <div className="text-center text-gray-500">
+                <svg
+                    className="mx-auto mb-4 w-12 h-12 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -294,7 +271,8 @@ export function Index() {
                 />
               </svg>
               没有找到结果
-            </div>
+              {/*展示流行视频内容*/}
+              </div>
             <TrendingList title="电影" items={trendingMovies} gradientFrom="blue-500" gradientTo="purple-500" />
             <TrendingList title="电视剧" items={trendingTVShows} gradientFrom="green-500" gradientTo="teal-500" />
             <TrendingList title="综艺" items={trendingVarietyShows} gradientFrom="pink-500" gradientTo="red-500" />
