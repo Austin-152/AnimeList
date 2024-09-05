@@ -5,17 +5,15 @@ import { fetchVideoDetails } from "@/app/api/api";
 import type { VideoComponent } from "@/app/api/api";
 import Navbar from '@/components/nav';
 import Footer from '@/components/footer';
+import ReactPlayer from 'react-player';
 
 const VideoPage = () => {
     const router = useRouter();
     const { id } = router.query;
 
-
-    // 使用 VideoComponent 接口定义状态
     const [videoDetails, setVideoDetails] = useState<VideoComponent[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [currentVideoUrl, setCurrentVideoUrl] = useState<string>('');  // 当前播放的视频 URL
-
+    const [currentVideoUrl, setCurrentVideoUrl] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,8 +21,12 @@ const VideoPage = () => {
                 console.log(`Sending POST request to /api/query/ole/detail with keyword: ${id}`);
                 try {
                     const details = await fetchVideoDetails(id as string);
-                    console.log('Fetched video details:', details);  // 打印请求返回的数据
+                    console.log('Fetched video details:', details);
                     setVideoDetails(details);
+                    if (details.length > 0) {
+                        console.log('Setting initial video URL:', details[0].url);
+                        setCurrentVideoUrl(details[0].url); // 默认设置第一个视频的 URL
+                    }
                 } catch (error) {
                     console.error('Error fetching video details:', error);
                 } finally {
@@ -34,69 +36,54 @@ const VideoPage = () => {
         };
 
         fetchData();
-    }, [id]);  // id 作为依赖，确保在 id 变化时重新触发
-    const handlePlayButtonClick = () => {
-        if (videoDetails.length > 0) {
+    }, [id]);
+
+    const handleVideoClick = () => {
+        if (videoDetails.length > 0){
+            if (videoDetails[0].url) {
+                // 报错 随后终止播放
+                console.error('Video URL is empty or undefined');
+            }
             setCurrentVideoUrl(videoDetails[0].url);
+        } else {
+            console.error('Video URL is empty or undefined');
         }
     };
 
     return (
-        <div style={{ backgroundColor: '#333', color: '#fff', minHeight: '100vh', padding: '20px' }}>
+        <div className="bg-gray-900 text-white min-h-screen p-5">
             <Navbar />
-            <div style={{maxWidth: '800px', margin: '0 auto', marginTop: '20px'}}>
-                {/* 视频播放区域 */}
-                <div style={{backgroundColor: '#000', height: '450px', position: 'relative'}}>
+            <div className="max-w-2xl mx-auto mt-5">
+                <div className="bg-black h-112 relative">
                     {currentVideoUrl ? (
-                        <video
+                        <ReactPlayer
+                            url={currentVideoUrl}
+                            playing
                             controls
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                            }}
-                            src={"https://player.viloud.tv/embed/play?url=" + currentVideoUrl}
+                            width="100%"
+                            height="100%"
+                            className="object-cover"
                         />
                     ) : (
-                        <button
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                padding: '10px 20px',
-                                backgroundColor: '#555',
-                                border: 'none',
-                                color: '#fff',
-                                cursor: 'pointer',
-                                borderRadius: '8px', // 添加圆角
-                            }}
-                            onClick={handlePlayButtonClick}
-                        >
-                            Play
-                        </button>
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white">
+                            No video selected
+                        </div>
                     )}
                 </div>
-
-
-                {/* 显示加载指示器 */}
                 {loading ? (
-                    <div style={{textAlign: 'center', marginTop: '20px'}}>Loading...</div>
+                    <div className="text-center mt-5">Loading...</div>
                 ) : (
-                    // 集数列表
-                    <ul style={{listStyleType: 'none', padding: 0, marginTop: '20px', textAlign: 'left'}}>
+                    <ul className="list-none p-0 mt-5 text-left">
                         {videoDetails.map((video, index) => (
                             <li
                                 key={index}
-                                style={{padding: '10px 0', borderBottom: index < videoDetails.length - 1 ? '1px solid #444' : 'none'}}
-                                onClick={() => setCurrentVideoUrl(video.url)} // 设置视频url
+                                className={`py-2 ${index < videoDetails.length - 1 ? 'border-b border-gray-700' : ''}`}
+                                onClick={() => handleVideoClick()}
                             >
                                 <a
                                     href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();  // 阻止默认的导航行为
-                                    }}
-                                    style={{color: '#fff', textDecoration: 'none'}}
+                                    onClick={(e) => e.preventDefault()}
+                                    className="text-white no-underline"
                                 >
                                     {video.title}
                                 </a>
