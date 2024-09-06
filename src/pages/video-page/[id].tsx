@@ -38,13 +38,9 @@ const VideoPage = () => {
         fetchData();
     }, [id]);
 
-    const handleVideoClick = () => {
-        if (videoDetails.length > 0){
-            if (videoDetails[0].url) {
-                // 报错 随后终止播放
-                console.error('Video URL is empty or undefined');
-            }
-            setCurrentVideoUrl(videoDetails[0].url);
+    const handleVideoClick = (url: string) => {
+        if (url) {
+            setCurrentVideoUrl(url);
         } else {
             console.error('Video URL is empty or undefined');
         }
@@ -77,8 +73,8 @@ const VideoPage = () => {
                         {videoDetails.map((video, index) => (
                             <li
                                 key={index}
-                                className={`py-2 ${index < videoDetails.length - 1 ? 'border-b border-gray-700' : ''}`}
-                                onClick={() => handleVideoClick()}
+                                className={`py-2 ${index < videoDetails.length - 1 ? 'border-b border-gray-700' : ''} hover:bg-gray-700`}
+                                onClick={() => handleVideoClick(video.url)}
                             >
                                 <a
                                     href="#"
