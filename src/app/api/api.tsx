@@ -118,7 +118,7 @@ const fetchTrending = async (period: string, typeID: number) => {
 
 const fetchTrendingV2 = async (typeID: number, count: Optional<number> = 10) => {
     try {
-        const response = await axios.post(`${BaseURL}/api/trending/v2/${typeID}`, {
+        const response = await axios.post(`${BaseURL}/api/trending/v2/${typeID}?amount=${count}`, {
         });
         return response.data.data;
     } catch (error) {
