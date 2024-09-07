@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import useSWR, { mutate } from 'swr';
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import ProfileCard from "@/components/ui/ProfileCard"; // 导入个人资料组件
 
 /**
  * SVG Fan Icon component.
  * @param {React.SVGProps<SVGSVGElement>} props - SVG properties.
  * @returns {JSX.Element} The SVG element.
  */
+
 function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -93,6 +95,7 @@ export default function Navbar(): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [showProfile, setShowProfile] = useState(false);//个人信息卡片
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -104,6 +107,15 @@ export default function Navbar(): JSX.Element {
     revalidateOnReconnect: true,
     shouldRetryOnError: true,
   });
+
+  //个人信息卡片
+  const handleOpenProfile = () => {
+    setShowProfile(true);
+  };
+
+  const handleCloseProfile = () => {
+    setShowProfile(false);
+  };
 
   useEffect(() => {
     return () => {};
@@ -159,7 +171,7 @@ export default function Navbar(): JSX.Element {
               <span>{userData.username}</span>
             </button>
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg">
                 <div className="p-4 border-b">
                   <p className="text-sm text-gray-700">{userData.name}</p>
                   <p className="text-sm text-gray-500">ID: {userData.sub}</p>
@@ -174,18 +186,16 @@ export default function Navbar(): JSX.Element {
                     设置
                   </button>
                   <button
-                    onClick={() => {
-                      alert("功能暂未开放 敬请期待");
-                    }}
-                    className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                      onClick={handleOpenProfile}
+                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
                   >
-                    修改资料
+                    编辑资料
                   </button>
                   <button
-                    onClick={() => {
-                      alert("功能暂未开放 敬请期待");
-                    }}
-                    className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
+                      onClick={() => {
+                        alert("功能暂未开放 敬请期待");
+                      }}
+                      className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
                   >
                     我的推送令牌
                   </button>
@@ -198,6 +208,7 @@ export default function Navbar(): JSX.Element {
                   >
                     Sign Out
                   </button>
+                  {showProfile && <ProfileCard onClose={handleCloseProfile} />}
                 </div>
               </div>
             )}
