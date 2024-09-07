@@ -68,7 +68,6 @@ export function Index() {
   const [trendingAnime, setTrendingAnime] = useState<Item[]>([]);
 
   useEffect(() => {
-    fetchTrendingV2(2).then(setTrendingTVShows);
     fetchTrendingV2(3).then(setTrendingVarietyShows);
     fetchTrendingV2(4).then(setTrendingAnime);
   }, []);
@@ -295,7 +294,6 @@ export function Index() {
               </svg>
               没有找到结果
             </div>
-            <TrendingList title="电视剧" items={trendingTVShows} gradientFrom="green-500" gradientTo="teal-500" />
             <TrendingList title="综艺" items={trendingVarietyShows} gradientFrom="pink-500" gradientTo="red-500" />
             <TrendingList title="动漫" items={trendingAnime} gradientFrom="yellow-500" gradientTo="orange-500" />
           </section>

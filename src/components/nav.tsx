@@ -140,12 +140,10 @@ export default function Navbar(): JSX.Element {
           <FanIcon className="w-6 h-6" />
           <span>Anime Hub</span>
         </Link>
-        <Link href="/" className="text-white hover:bg-gray-700 rounded px-3 py-2">Home</Link>
+        {/*<Link href="/" className="text-white hover:bg-gray-700 rounded px-3 py-2">Home</Link>*/}
         <Link href="/trending" className="text-white hover:bg-gray-700 rounded px-3 py-2">Trending</Link>
-        <Link href="/videos" className="text-white hover:bg-gray-700 rounded px-3 py-2">Videos</Link>
         <Link href="/movies" className="text-white hover:bg-gray-700 rounded px-3 py-2">Movies</Link>
         <Link href="/series" className="text-white hover:bg-gray-700 rounded px-3 py-2">Series</Link>
-        <Link href="recommends" className="text-white hover:bg-gray-700 rounded px-3 py-2">Recommends</Link>
       </div>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
         {userData && !error ? (

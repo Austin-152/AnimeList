@@ -7,6 +7,7 @@ import Navbar from '@/components/nav';
 import Image from "next/image";
 // tailwind
 import 'tailwindcss/tailwind.css';
+import Footer from "@/components/footer";
 
 export default function Trending() {
   const [trendingMovies, setTrendingMovies] = useState<Item[]>([]);
@@ -188,6 +189,7 @@ export default function Trending() {
             </div>
           </div>
         </section>
+        <Footer />
       </main>
     </div>
   );
