@@ -156,6 +156,7 @@ export default function Navbar(): JSX.Element {
         <Link href="/trending" className="text-white hover:bg-gray-700 rounded px-3 py-2">Trending</Link>
         <Link href="/movies" className="text-white hover:bg-gray-700 rounded px-3 py-2">Movies</Link>
         <Link href="/series" className="text-white hover:bg-gray-700 rounded px-3 py-2">Series</Link>
+        <Link href="/report" className="text-white hover:bg-gray-700 rounded px-3 py-2">Report</Link>
       </div>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
         {userData && !error ? (
