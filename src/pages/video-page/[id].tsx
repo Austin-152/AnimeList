@@ -11,6 +11,7 @@ const VideoPage = () => {
 
     const [videoDetails, setVideoDetails] = useState<{ title: string, url: string }[]>([]); // 定义视频详情的类型
     const [loading, setLoading] = useState<boolean>(true);
+    const [currentVideo, setCurrentVideo] = useState<string>(''); // 当前播放的视频URL
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,6 +21,9 @@ const VideoPage = () => {
                     const details = await fetchVideoDetails(id as string);
                     console.log('Fetched video details:', details);
                     setVideoDetails(details); // 设置视频详情
+                    if (details.length > 0) {
+                        setCurrentVideo(details[0].url); // 默认播放第一集
+                    }
                 } catch (error) {
                     console.error('Error fetching video details:', error);
                 } finally {
@@ -31,11 +35,10 @@ const VideoPage = () => {
         fetchData();
     }, [id]);
 
-    // 点击视频链接时打开新页面
+    // 点击视频链接时更新当前播放的视频
     const handleVideoClick = (url: string) => {
         if (url) {
-            const embedUrl = `https://player.viloud.tv/embed/play?url=${url}`;
-            window.open(embedUrl, '_blank'); // 在新标签页中打开嵌入式播放器
+            setCurrentVideo(url); // 设置当前播放的视频URL
         } else {
             console.error('Video URL is empty or undefined');
         }
@@ -44,27 +47,43 @@ const VideoPage = () => {
     return (
         <div className="bg-gray-900 text-white min-h-screen p-5">
             <Navbar />
-            <div className="max-w-2xl mx-auto mt-5">
+            <div className="max-w-4xl mx-auto mt-5">
+                {/* 视频播放器 */}
+                <div className="w-full h-[500px] mb-8">
+                    {currentVideo ? (
+                        <iframe
+                            src={`https://www.hlsplayer.net/embed?type=m3u8&src=${currentVideo}`}
+                            frameBorder="0"
+                            allowFullScreen
+                            className="w-full h-full rounded-lg shadow-lg"
+                        />
+                    ) : (
+                        <div className="text-center text-gray-400">No video available</div>
+                    )}
+                </div>
+
+                {/* 视频选集 */}
                 {loading ? (
                     <div className="text-center mt-5">Loading...</div>
                 ) : (
-                    <ul className="list-none p-0 mt-5 text-left">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {videoDetails.map((video, index) => (
-                            <li
+                            <div
                                 key={index}
-                                className={`py-2 ${index < videoDetails.length - 1 ? 'border-b border-gray-700' : ''} hover:bg-gray-700`}
-                                onClick={() => handleVideoClick(video.url)} // 点击时打开新网页
+                                className={`cursor-pointer transition-transform transform hover:scale-105 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700 hover:bg-gray-700`}
+                                onClick={() => handleVideoClick(video.url)} // 点击时更改播放视频
                             >
                                 <a
                                     href="#"
                                     onClick={(e) => e.preventDefault()} // 禁用默认的链接行为
-                                    className="text-white no-underline"
+                                    className="text-white no-underline block"
                                 >
-                                    {video.title}
+                                    <h3 className="text-lg font-semibold mb-2">{video.title}</h3>
+                                    <p className="text-sm text-gray-400">Episode {index + 1}</p>
                                 </a>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 )}
             </div>
             <Footer />

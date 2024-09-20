@@ -12,6 +12,7 @@ export function getRandomEffect(): string {
   const effectKeys = Object.keys(effects) as Array<keyof typeof effects>; // 使用类型断言来告诉 TypeScript 这些键是有效的
   const randomIndex = Math.floor(Math.random() * effectKeys.length); // 随机生成一个索引
   const randomEffectKey = effectKeys[randomIndex]; // 随机选择一个效果的键
+    console.log(randomEffectKey);
   return effects[randomEffectKey]; // 返回对应的效果URL
 }
 
