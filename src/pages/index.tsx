@@ -8,7 +8,7 @@ import {Scene} from "@/components/scene";
 const HomePage = () => (
   <div>
       <Navbar />
-      <Scene/>
+      {/*<Scene/>*/}
         <IndexComponent />
       <Footer />
   </div>

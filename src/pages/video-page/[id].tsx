@@ -66,7 +66,7 @@ const VideoPage = () => {
                             className="w-full h-full rounded-lg shadow-lg"
                         />
                     ) : (
-                        <div className="text-center text-gray-400">No video available</div>
+                        <div className="text-center text-gray-400">Loading...</div>
                     )}
                 </div>
 
@@ -89,12 +89,15 @@ const VideoPage = () => {
                                 >
                                     <h3 className="text-lg font-semibold mb-2">{video.title}</h3>
                                     <p className="text-sm text-gray-400">Episode {index + 1}</p>
+
                                 </a>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+            <br/> {/* 添加换行 */}
+            <br/>
             <Footer/>
         </div>
     );
