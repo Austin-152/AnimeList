@@ -5,6 +5,14 @@ import {randomBytes} from "node:crypto";
 dotenv.config();
 
 const nextConfig = {
+    /** @type {import('next').NextConfig} */
+  reactStrictMode: true,
+
+  // transpilePackages 用于指定要编译的 ES 模块
+  transpilePackages: ['kitchen-flow-editor', '@ant-design/pro-editor',
+      'zustand', 'leva', "@ant-design/icons-svg","@babel/runtime",
+      "/rc-util","@ant-design/icons","@ant-design/pro-utils",
+      "@ant-design/pro-provider","@ant-design/pro-layout","@ant-design/pro-utils","rc-pagination","rc-picker"],
   // load env
     env: {
         BaseURL: process.env.NEXT_PUBLIC_BASE_URL,

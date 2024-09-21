@@ -1,7 +1,6 @@
-// 导入 axios 库，用于发送 HTTP 请求
 import axios from 'axios';
-import {Optional} from "@silverhand/essentials";
-// 首先需要引入axios 如果没安装的话 在终端输入npm i axios 安装一下
+import { Optional } from "@silverhand/essentials";
+
 // 定义一个接口，描述你的数据对象的结构
 interface Item {
     hits: number;
@@ -13,10 +12,44 @@ interface Item {
     pic: string;
     blurb: string;
 }
-const BaseURL = process.env.BaseURL
-// 定义一个异步函数 fetchSearchResults，用于获取搜索结果
-// 这个函数接受三个参数：keyword（关键词），page（页码，默认为1），size（每页的数量，默认为10）
-const fetchSearchResults = async (keyword: string, page="1", size=10) => {
+
+interface DataItem {
+    words: string[];
+}
+
+interface VideoComponent {
+    title: string;
+    url: string;
+    index: number;
+}
+
+const BaseURL = process.env.BaseURL; // 确保环境变量正确
+
+// 检查用户是否登录的函数
+const checkLoginStatus = async (): Promise<boolean> => {
+    try {
+        const response = await axios.get('/api/getUserInfo');
+        // 如果返回不是 401，说明用户已登录
+        console.log('Login status:', response.status);
+        return response.status === 200;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            console.error('User not logged in');
+            return false;
+        }
+        console.error('Error checking login status:', error);
+        return false;
+    }
+};
+
+// 搜索视频的函数
+const fetchSearchResults = async (keyword: string, page = "1", size = 10) => {
+    const isLoggedIn = await checkLoginStatus(); // 检查是否登录
+    if (!isLoggedIn) {
+        // 如果用户未登录，展示错误信息
+        return false;
+    }
+
     try {
         const response = await axios.post(`${BaseURL}/api/query/ole/search`, {
             keyword,
@@ -24,52 +57,42 @@ const fetchSearchResults = async (keyword: string, page="1", size=10) => {
             size
         });
 
-        // Return response.data.data instead of response.data
         return response.data.data;
     } catch (error) {
-        throw error;
+        console.error('Error fetching search results:', error, keyword);
+        return false;
     }
 };
 
-interface DataItem {
-    words: string[];
-}
-// 关键词联想
+// 关键词联想的函数
 const fetchKeywordSuggestions = async (keyword: string) => {
+    const isLoggedIn = await checkLoginStatus(); // 检查是否登录
+    if (!isLoggedIn) {
+        throw new Error('You must be logged in to get keyword suggestions.');
+    }
+
     try {
-        console.log(`Sending POST request to /api/query/keyword with keyword: ${keyword}`);
+        // console.log(`Sending POST request to /api/query/ole/keyword with keyword: ${keyword}`);
         const response = await axios.post(`${BaseURL}/api/query/ole/keyword`, {
             keyword
         });
-
-        // Extract words from each item in the data array and flatten them into a single array
         return response.data.data.flatMap((item: DataItem) => item.words);
     } catch (error) {
         console.error('Error fetching keyword suggestions:', error);
         throw error;
     }
 };
-// 定义 VideoCommponent 类型
-interface VideoComponent {
-    title: string;
-    url: string;
-    index: number;
-}
 
 // 获取视频详情
 const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
     try {
-
         const response = await axios.post(`${BaseURL}/api/query/ole/detail`, { id });
-
-        // 访问 response.data.data.urls 数组
         const urls = response.data.data.urls;
 
         if (!Array.isArray(urls)) {
             console.error('Invalid response:', response.data);
         }
 
-        // 将 urls 数组映射为 VideoComponent 数组
         const videoDetails: VideoComponent[] = urls.map((item: any, idx: number) => ({
             title: item.title,
             url: item.url,
@@ -77,7 +100,6 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
         }));
 
         console.log('Mapped video details:', videoDetails);
-
         return videoDetails;
     } catch (error) {
         console.error('Error fetching video details:', error);
@@ -102,34 +124,31 @@ const getPublicKey = async (): Promise<string> => {
     }
 };
 
-
+// 获取趋势数据
 const fetchTrending = async (period: string, typeID: number) => {
-  try {
-    const response = await axios.post(`${BaseURL}/api/trending/${period}/trend`, {
-      params: {"typeID": typeID}
-    });
-    return response.data.data;
-  } catch (error) {
-    console.error('Error fetching trending data:', error);
-    throw error;
-  }
-};
-
-
-const fetchTrendingV2 = async (typeID: number, count: Optional<number> = 10) => {
     try {
-        const response = await axios.post(`${BaseURL}/api/trending/v2/${typeID}?amount=${count}`, {
+        const response = await axios.post(`${BaseURL}/api/trending/${period}/trend`, {
+            params: { "typeID": typeID }
         });
         return response.data.data;
     } catch (error) {
         console.error('Error fetching trending data:', error);
         throw error;
     }
-}
+};
 
+// 获取 v2 版本的趋势数据
+const fetchTrendingV2 = async (typeID: number, count: Optional<number> = 10) => {
+    try {
+        const response = await axios.post(`${BaseURL}/api/trending/v2/${typeID}?amount=${count}`, {});
+        return response.data.data;
+    } catch (error) {
+        console.error('Error fetching trending data:', error);
+        throw error;
+    }
+};
 
-
-export type {VideoComponent};
+export type { VideoComponent };
 export { fetchVideoDetails };
 export { fetchKeywordSuggestions };
 export { fetchSearchResults };
@@ -137,3 +156,4 @@ export type { Item };
 export { getPublicKey };
 export { fetchTrending };
 export { fetchTrendingV2 };
+export { checkLoginStatus };

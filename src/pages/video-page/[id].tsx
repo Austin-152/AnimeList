@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css';
 import { fetchVideoDetails } from "@/app/api/api"; // 保留获取视频详情的函数
 import Navbar from '@/components/nav'; // 导航栏组件
 import Footer from '@/components/footer'; // 页脚组件
+import { Player } from '@lottiefiles/react-lottie-player'; // 引入Lottie动画库
 
 const VideoPage = () => {
     const router = useRouter();
@@ -45,12 +46,19 @@ const VideoPage = () => {
     };
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen p-5">
+        <div className="bg-gray-900 text-white min-h-screen p-5 pb-20"> {/* 添加pb-20 */}
             <Navbar />
             <div className="max-w-4xl mx-auto mt-5">
                 {/* 视频播放器 */}
-                <div className="w-full h-[500px] mb-8">
-                    {currentVideo ? (
+                <div className="w-full h-[500px] mb-8 flex justify-center items-center">
+                    {loading ? (
+                        <Player
+                            src="https://lottie.host/5c91a04a-3803-4265-8c9c-cf2e5d714358/nCMNGSQU9i.json"
+                            className="w-48 h-48" // 缩小动画的大小
+                            autoplay
+                            loop
+                        />
+                    ) : currentVideo ? (
                         <iframe
                             src={`https://www.hlsplayer.net/embed?type=m3u8&src=${currentVideo}`}
                             frameBorder="0"
@@ -62,9 +70,10 @@ const VideoPage = () => {
                     )}
                 </div>
 
+
                 {/* 视频选集 */}
                 {loading ? (
-                    <div className="text-center mt-5">Loading...</div>
+                    <div className="text-center mt-5"></div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {videoDetails.map((video, index) => (
@@ -86,7 +95,7 @@ const VideoPage = () => {
                     </div>
                 )}
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 }
