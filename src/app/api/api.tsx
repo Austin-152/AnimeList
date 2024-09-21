@@ -68,7 +68,7 @@ const fetchSearchResults = async (keyword: string, page = "1", size = 10) => {
 const fetchKeywordSuggestions = async (keyword: string) => {
     const isLoggedIn = await checkLoginStatus(); // 检查是否登录
     if (!isLoggedIn) {
-        throw new Error('You must be logged in to get keyword suggestions.');
+        throw new Error('You must Sign in to use this feature');
     }
 
     try {
