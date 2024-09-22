@@ -1,34 +1,27 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { fetchSearchResults, fetchTrendingV2, fetchKeywordSuggestions, Item } from '@/app/api/api';
+import { fetchSearchResults, fetchKeywordSuggestions, Item } from '@/app/api/api';
 import { Alert, notification } from 'antd'; // 引入antd的Alert和notification组件
-import useSWR from 'swr';
-import Navbar from './nav';
 import Image from "next/image";
 import { SearchIcon } from "lucide-react";
-import TrendingList from '@/components/trends';
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Scene } from "@/components/scene";
 import {debounce} from "next/dist/server/utils";
-import {Scene} from "@/components/scene";
 
 export function Index() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [data, setData] = useState<Item[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isLoading, setIsLoading] = useState(false);  // Added isLoading state
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>('');
   const [isComposing, setIsComposing] = useState(false);
-  const [trendingTVShows, setTrendingTVShows] = useState<Item[]>([]);
-  const [trendingVarietyShows, setTrendingVarietyShows] = useState<Item[]>([]);
-  const [trendingAnime, setTrendingAnime] = useState<Item[]>([]);
   const [error, setError] = useState<string | null>(null); // 保存错误信息的状态
 
   // Fetch trending shows on mount
   useEffect(() => {
-    fetchTrendingV2(3).then(setTrendingVarietyShows);
-    fetchTrendingV2(4).then(setTrendingAnime);
+    // Removed fetching anime and variety shows
   }, []);
 
   // 处理搜索
@@ -38,7 +31,7 @@ export function Index() {
     if (!keyword.trim()) return;
 
     try {
-      setIsLoading(true);
+      setIsLoading(true);  // Set loading state to true
       setData([]);
       setSuggestions([]);
       const results = await fetchSearchResults(keyword, "1", 10);
@@ -51,7 +44,7 @@ export function Index() {
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false);  // Set loading state to false
     }
   }, [keyword]);
 
@@ -61,14 +54,15 @@ export function Index() {
       try {
         const newSuggestions = await fetchKeywordSuggestions(keyword);
         setSuggestions(newSuggestions);
-      } catch (error: any) {
-        // 如果捕获到错误，更新错误信息
-        setError(error.message);
-        // 使用 notification 显示全局提示框
-        notification.error({
-          message: 'Error',
-          description: error.message,
-        });
+      } catch (error: unknown) {  // Specify error type as unknown
+        // If you need more specific error handling, cast the error as an Error object
+        if (error instanceof Error) {
+          setError(error.message);
+          notification.error({
+            message: 'Error',
+            description: error.message,
+          });
+        }
       } finally {
         setIsLoading(false);
       }
@@ -115,7 +109,7 @@ export function Index() {
 
   return (
     <div className="flex flex-col min-h-screen">
-            <Scene/>
+      {/*<Scene/>*/}
       <main className="flex-1">
         <section className="bg-gray-950 text-gray-50 py-12 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">Welcome to Anime Hub</h1>
@@ -191,18 +185,31 @@ export function Index() {
             </div>
           </section>
         ) : (
-          <section className="py-12 md:py-24 px-4 md:px-6">
-            <div className="text-center text-gray-500">
-              <svg className="mx-auto mb-4 w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-              </svg>
-              没有找到结果
-            </div>
+            <section className="py-12 md:py-24 px-4 md:px-6">
+              <div className="text-center">
+                <Image
+                  src="/notFound.svg"
+                  alt="404 Not Found"
+                  width={400}
+                  height={400}
+                  className="mx-auto"
+                />
 
-            {/* 热门综艺与动漫 */}
-            <TrendingList title="综艺" items={trendingVarietyShows} gradientFrom="pink-500" gradientTo="red-500" />
-            <TrendingList title="动漫" items={trendingAnime} gradientFrom="yellow-500" gradientTo="orange-500" />
-          </section>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Oops! We couldn&apos;t find anything for
+                  &rdquo; {keyword}&rdquo;</h2>
+                <p className="text-lg text-gray-500 mb-8">It seems like there&apos;s nothing here... How about trying a
+                  different keyword or exploring some of our popular content?</p>
+
+                <div className="mt-4">
+                  <Button
+                      className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full"
+                      onClick={() => window.location.assign('/trending')}>
+                    Explore Popular Anime
+                  </Button>
+                </div>
+              </div>
+            </section>
+
         )}
       </main>
     </div>

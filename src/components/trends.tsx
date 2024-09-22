@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { Item } from '@/app/api/api';
+import {useEffect} from "react";
 
 interface TrendingListProps {
   title: string;
@@ -12,6 +13,9 @@ interface TrendingListProps {
 }
 
 export default function Trends({ title, items, gradientFrom, gradientTo }: TrendingListProps) {
+    useEffect(() => {
+        // 预加载api数据
+    }, []);
   return (
     <div className="mb-12">
       <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2 mb-6">
