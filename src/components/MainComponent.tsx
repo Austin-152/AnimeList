@@ -12,7 +12,6 @@ import {debounce} from "next/dist/server/utils";
 
 export function Index() {
   const [data, setData] = useState<Item[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);  // Added isLoading state
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>('');
