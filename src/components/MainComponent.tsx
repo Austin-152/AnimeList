@@ -165,7 +165,7 @@ export function Index() {
                       <div className="relative">
                         <Image
                           alt={item.name}
-                          className="object-cover w-full aspect-video"
+                          className="object-cover w-full aspect-[3/4]"
                           src={`https://www.olevod.tv/${item.pic}`}
                           width={400}
                           height={225}
