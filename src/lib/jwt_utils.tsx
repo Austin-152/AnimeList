@@ -13,6 +13,7 @@ export function generateToken(payload: object, expiresIn: string | number = '1h'
     }
 }
 
+
 // 验证 JWT 令牌
 export function verifyToken(token: string): object | null {
     try {
