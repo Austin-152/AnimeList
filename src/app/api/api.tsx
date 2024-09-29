@@ -32,8 +32,8 @@ const checkLoginStatus = async (): Promise<boolean> => {
         // 如果返回不是 401，说明用户已登录
         console.log('Login status:', response.status);
         return response.status === 200;
-    } catch (error: any) {
-        if (error.response && error.response.status === 401) {
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
             console.error('User not logged in');
             return false;
         }
@@ -93,9 +93,9 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
             console.error('Invalid response:', response.data);
         }
 
-        const videoDetails: VideoComponent[] = urls.map((item: any, idx: number) => ({
+        const videoDetails: VideoComponent[] = urls.map((item: { title: string; url: string }, idx: number) => ({
             title: item.title,
-            url: item.url,
+            url:  item.url,
             index: idx + 1,
         }));
 
