@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Scene } from "@/components/scene";
 import {debounce} from "next/dist/server/utils";
+import { useRouter } from 'next/router';
 
 export function Index() {
   const [data, setData] = useState<Item[]>([]);
@@ -17,6 +18,7 @@ export function Index() {
   const [keyword, setKeyword] = useState<string>('');
   const [isComposing, setIsComposing] = useState(false);
   const [error, setError] = useState<string | null>(null); // 保存错误信息的状态
+  const router = useRouter();  // 使用 useRouter 进行路由跳转
 
   // Fetch trending shows on mount
   useEffect(() => {
@@ -24,28 +26,19 @@ export function Index() {
   }, []);
 
   // 处理搜索
-  const handleSearch = useCallback(async (event?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>) => {
-    event?.preventDefault();
+  const handleSearch = useCallback(
+      (event?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>) => {
+        event?.preventDefault();
 
-    if (!keyword.trim()) return;
-
-    try {
-      setIsLoading(true);  // Set loading state to true
-      setData([]);
-      setSuggestions([]);
-      const results = await fetchSearchResults(keyword, "1", 10);
-      if (Array.isArray(results.data)) {
-        const data = results.data.reduce((acc: Item[], item: { list: Item[] | null }) => acc.concat(item.list || []), []);
-        setData(data);
-      } else {
-        console.error("Failed to fetch search results");
-      }
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    } finally {
-      setIsLoading(false);  // Set loading state to false
-    }
-  }, [keyword]);
+        if (keyword.trim()) {
+          // 使用 window.open 在新标签页中打开页面
+          const encodedKeyword = encodeURIComponent(keyword);
+          console.log(`Searching for: ${encodedKeyword}`);
+          window.open(`/search/${encodedKeyword}`, '_blank');  // 新标签页打开
+        }
+      },
+      [keyword]
+  );
 
   // 获取关键词建议
   const fetchSuggestions = useCallback(async (keyword: string) => {
@@ -102,9 +95,10 @@ export function Index() {
 
   const handleSuggestionClick = (suggestion: string) => {
     setKeyword(suggestion);
-    setSuggestions([]);
-    handleSearch().then(r => console.log(r));
+    const encodedKeyword = encodeURIComponent(suggestion);
+    router.push(`/search/${encodedKeyword}`);  // 点击建议时跳转到动态路由
   };
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -152,6 +146,7 @@ export function Index() {
           {/* 错误信息提示 */}
           {error && <Alert message={error} type="error" showIcon className="mt-4" />}
         </section>
+
 
         {/* 搜索结果 */}
         {data.length > 0 ? (
