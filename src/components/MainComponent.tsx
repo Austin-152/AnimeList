@@ -146,65 +146,6 @@ export function Index() {
           {/* 错误信息提示 */}
           {error && <Alert message={error} type="error" showIcon className="mt-4" />}
         </section>
-
-
-        {/* 搜索结果 */}
-        {data.length > 0 ? (
-          <section className="py-12 md:py-24 px-4 md:px-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">Search Results</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {data.map((item) => (
-                <Card className="group" key={item.id}>
-                  <Link href={`/video-page/${item.id}`}>
-                    <div className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                      <div className="relative">
-                        <Image
-                          alt={item.name}
-                          className="object-cover w-full aspect-[3/4]"
-                          src={`https://www.olevod.tv/${item.pic}`}
-                          width={400}
-                          height={225}
-                          layout="responsive"
-                        />
-                        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4">
-                          <h3 className="text-lg font-bold text-white mb-1">{item.name}</h3>
-                          <p className="text-gray-200 text-sm mb-2">{item.blurb || '暂无简介'}</p>
-                          <p className="text-gray-400 text-xs">更新至 {item.remarks.replace('更新至', '') || '未知集数'}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </Card>
-              ))}
-            </div>
-          </section>
-        ) : (
-            <section className="py-12 md:py-24 px-4 md:px-6">
-              <div className="text-center">
-                <Image
-                  src="/notFound.svg"
-                  alt="404 Not Found"
-                  width={400}
-                  height={400}
-                  className="mx-auto"
-                />
-
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Oops! We couldn&apos;t find anything for
-                  &rdquo; {keyword}&rdquo;</h2>
-                <p className="text-lg text-gray-500 mb-8">It seems like there&apos;s nothing here... How about trying a
-                  different keyword or exploring some of our popular content?</p>
-
-                <div className="mt-4">
-                  <Button
-                      className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full"
-                      onClick={() => window.location.assign('/trending')}>
-                    Explore Popular Anime
-                  </Button>
-                </div>
-              </div>
-            </section>
-
-        )}
       </main>
     </div>
   );
