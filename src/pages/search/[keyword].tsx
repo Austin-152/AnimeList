@@ -38,7 +38,7 @@ export default function SearchPage() {
 
     useEffect(() => {
         if (keyword) {
-            handleSearch();
+            handleSearch().then(r => r);
         }
     }, [handleSearch, keyword]);
 
