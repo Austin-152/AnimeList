@@ -45,7 +45,7 @@ export default function SearchPage() {
     return (
         <div className="min-h-screen flex flex-col">
             <Navbar />
-            <title>Search Results for {decodeURIComponent(keyword as string)} - AnimeList</title>
+            <title>{decodeURIComponent(keyword as string)} - AnimeList</title>
             <main className="flex-1">
                 <section className="py-12 md:py-24 px-4 md:px-6">
                     {isLoading ? (

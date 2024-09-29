@@ -61,7 +61,6 @@ const VideoPage = () => {
                     ) : currentVideo ? (
                         <iframe
                             src={`https://www.hlsplayer.net/embed?type=m3u8&src=${currentVideo}`}
-                            frameBorder="0"
                             allowFullScreen
                             className="w-full h-full rounded-lg shadow-lg"
                         />
