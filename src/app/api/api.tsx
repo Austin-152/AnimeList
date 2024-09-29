@@ -42,7 +42,6 @@ const checkLoginStatus = async (): Promise<boolean> => {
     }
 };
 
-
 // 搜索视频的函数
 const fetchSearchResults = async (keyword: string, page = "1", size = 10) => {
     const isLoggedIn = await checkLoginStatus(); // 检查是否登录
