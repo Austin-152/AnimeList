@@ -3,6 +3,7 @@ import { fetchKeywordSuggestions } from '@/app/api/api';
 import { Alert, notification, AutoComplete, Input } from 'antd';
 import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
+import {SearchBox} from "@/components/search/searchox";
 
 export function Index() {
   const [options, setOptions] = useState<{ value: string; label: JSX.Element }[]>([]);
@@ -41,7 +42,7 @@ export function Index() {
   );
 
   const handleSelect = (value: string) => {
-    router.push(`/search/${encodeURIComponent(value)}`);
+    router.push(`/search/${encodeURIComponent(value)}`).then(r => r);
   };
 
   return (
@@ -52,23 +53,9 @@ export function Index() {
           <p className="text-lg md:text-xl mt-4 max-w-2xl text-center">
             Discover the latest and greatest anime series, movies, and more.
           </p>
-
-          <AutoComplete
-            style={{ width: '100%', maxWidth: '600px', marginTop: '40px' }}
-            options={options}
-            onSelect={handleSelect}
-            onSearch={debouncedHandleSearch}
-          >
-            <Input.Search
-              size="large"
-              placeholder="Search for anime..."
-              enterButton
-              allowClear
-            />
-          </AutoComplete>
-
-          {error && <Alert message={error} type="error" showIcon className="mt-4" />}
+          <SearchBox placeholder="Search for anime..." />
         </section>
+          {error && <Alert message={error} type="error" showIcon className="mt-4" />}
       </main>
     </div>
   );
