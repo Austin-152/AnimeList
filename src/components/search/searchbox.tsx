@@ -18,7 +18,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
       if (value.trim()) {
         try {
           const newSuggestions = await fetchKeywordSuggestions(value);
-          const suggestionOptions = newSuggestions.map((suggestion: string | number | bigint | boolean | React.ReactElement<never, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined) => {
+          const suggestionOptions = newSuggestions.map((suggestion: string | number | bigint | boolean | React.ReactElement<never, string | React.JSXElementConstructor<unknown>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined) => {
               return ({
                   value: suggestion,
                   label: <div>{suggestion}</div>,
@@ -52,6 +52,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
       <AutoComplete
         style={{ width: '100%', maxWidth: '600px', marginTop: '40px' }}
         options={options}
+        autoFocus={true}
+
         onSelect={handleSelect}
         onSearch={debouncedHandleSearch}
       >
