@@ -47,8 +47,7 @@
 
   import { logtoClient } from '@/lib/logto';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { IdTokenClaims } from '@logto/client';
-import { filterClaims } from "@/utils/userInfoFilter";
+  import { filterClaims } from "@/utils/userInfoFilter";
 
 export default logtoClient.withLogtoApiRoute((request: NextApiRequest, response: NextApiResponse) => {
   if (!request.user.isAuthenticated) {
