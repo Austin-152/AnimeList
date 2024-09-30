@@ -42,6 +42,7 @@ export default function SearchPage() {
         }
     }, [handleSearch, keyword]);
 
+
     return (
         <div className="min-h-screen flex flex-col">
             <Navbar />
