@@ -1,50 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { fetchKeywordSuggestions } from '@/app/api/api';
-import { Alert, notification, AutoComplete, Input } from 'antd';
-import { debounce } from 'lodash';
-import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { Alert } from 'antd';
 import {SearchBox} from "@/components/search/searchox";
 
 export function Index() {
-  const [options, setOptions] = useState<{ value: string; label: JSX.Element }[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-
-  const handleSearch = useCallback(
-    async (value: string) => {
-      if (value.trim()) {
-        try {
-          const newSuggestions = await fetchKeywordSuggestions(value);
-          const suggestionOptions = newSuggestions.map((suggestion: string | number | bigint | boolean | React.ReactElement<never, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined) => ({
-            value: suggestion,
-            label: <div>{suggestion}</div>,
-          }));
-          setOptions(suggestionOptions);
-        } catch (error) {
-          if (error instanceof Error) {
-            setError(error.message);
-            notification.error({
-              message: 'Error',
-              description: error.message,
-            });
-          }
-        }
-      } else {
-        setOptions([]);
-      }
-    },
-    []
-  );
-
-  const debouncedHandleSearch = useCallback(
-    debounce(handleSearch, 300),
-    []
-  );
-
-  const handleSelect = (value: string) => {
-    router.push(`/search/${encodeURIComponent(value)}`).then(r => r);
-  };
-
+  const [error] = useState<string | null>(null);
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
