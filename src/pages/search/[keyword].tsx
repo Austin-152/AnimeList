@@ -9,6 +9,7 @@ import 'tailwindcss/tailwind.css';
 import Navbar from "@/components/nav";
 import Footer from "@/components/footer";
 import Head from 'next/head';
+import {SearchBox} from "@/components/search/searchox";
 
 export default function SearchPage() {
     const router = useRouter();
@@ -47,19 +48,23 @@ export default function SearchPage() {
             <Head>
                 <title>{decodeURIComponent(keyword as string)} - AnimeList</title>
             </Head>
-            <Navbar />
+            <Navbar/>
+            <section className="align-middle text-center py-1 md:py-4 px-1 md:px-3">
+            <SearchBox placeholder={keyword as string}/>
+            </section>
             <main className="flex-1">
                 <section className="py-12 md:py-24 px-4 md:px-6">
                     {isLoading ? (
                         <p className="text-center text-gray-500">Loading...</p>
                     ) : error ? (
-                        <Alert message={error} type="error" showIcon className="mt-4" />
+                        <Alert message={error} type="error" showIcon className="mt-4"/>
                     ) : data.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {data.map((item) => (
                                 <Card className="group" key={item.id}>
                                     <Link href={`/video-page/${item.id}`}>
-                                        <div className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                        <div
+                                            className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                                             <div className="relative">
                                                 <Image
                                                     alt={item.name}
@@ -69,7 +74,8 @@ export default function SearchPage() {
                                                     height={225}
                                                     layout="responsive"
                                                 />
-                                                <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4">
+                                                <div
+                                                    className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4">
                                                     <h3 className="text-lg font-bold text-white mb-1">{item.name}</h3>
                                                     <p className="text-gray-200 text-sm mb-2">{item.blurb || '暂无简介'}</p>
                                                     <p className="text-gray-400 text-xs">更新至 {item.remarks.replace('更新至', '') || '未知集数'}</p>
@@ -94,7 +100,7 @@ export default function SearchPage() {
                     )}
                 </section>
             </main>
-            <Footer />
+            <Footer/>
         </div>
     );
 }
