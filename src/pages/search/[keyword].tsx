@@ -95,7 +95,7 @@ export default function SearchPage() {
                                 height={400}
                                 className="mx-auto"
                             />
-                            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Oops! No results found for "{decodeURIComponent(keyword as string)}"</h2>
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Oops! No results found for &quot;{decodeURIComponent(keyword as string)}&quot;</h2>
                         </div>
                     )}
                 </section>
