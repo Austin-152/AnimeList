@@ -41,7 +41,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
     []
   );
 
-  const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
+  const debouncedHandleSearch = useCallback(debounce(handleSearch, 500), []);
 
   const handleSelect = (value: string) => {
     router.push(`/search/${encodeURIComponent(value)}`);
