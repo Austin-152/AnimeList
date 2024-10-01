@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 interface ProfileCardProps {
     onClose: () => void;
@@ -27,7 +28,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onClose, userData }) => {
                 {/* 检查 userData 是否为 undefined */}
                 {userData && (
                     <div className="flex items-center space-x-4 mb-6">
-                        <img
+                        <Image
                             src={userData.picture}
                             alt="avatar"
                             className="w-12 h-12 rounded-full"

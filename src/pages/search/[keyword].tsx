@@ -9,7 +9,7 @@ import 'tailwindcss/tailwind.css';
 import Navbar from "@/components/nav";
 import Footer from "@/components/footer";
 import Head from 'next/head';
-import {SearchBox} from "@/components/search/searchox";
+import {SearchBox} from "@/components/search/searchbox";
 
 export default function SearchPage() {
     const router = useRouter();

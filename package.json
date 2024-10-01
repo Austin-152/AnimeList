@@ -22,6 +22,7 @@
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "concat-map": "^0.0.2",
     "dequal": "^2.0.3",
     "dotenv": "^16.4.5",
     "embla-carousel-react": "^8.3.0",

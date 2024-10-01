@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Alert } from 'antd';
-import {SearchBox} from "@/components/search/searchox";
+import {SearchBox} from "@/components/search/searchbox";
 
 export function Index() {
   const [error] = useState<string | null>(null);
