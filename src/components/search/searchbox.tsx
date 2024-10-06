@@ -15,8 +15,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
     const [isComposing, setIsComposing] = useState<boolean>(false); // 追踪输入法状态
     const router = useRouter();
 
-    useEffect(() => {
-        const precheckRequest = async () => {
+    const precheckRequest = async () => {
             try {
                 await fetchKeywordSuggestions('Yuki Forever💗'); // 试探性调用
                 // 可以在此处理成功的预检请求
@@ -26,7 +25,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
             }
         };
 
-        precheckRequest();
+    useEffect(() => {
+        precheckRequest().then(r => r);
     }, []);
 
     // 处理搜索建议，防抖包装
@@ -94,6 +94,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
                 onSelect={handleSelect}
                 value={searchValue} // 绑定搜索框的值
                 onChange={handleInputChange} // 当输入变化时更新状态
+                onClick={() => precheckRequest()} // 点击搜索框时进行预检
             >
                 <Input.Search
                     size="large"
