@@ -1,5 +1,17 @@
-import axios from 'axios';
 import { Optional } from "@silverhand/essentials";
+import axios from 'axios';
+import { cryptoMiddleware } from '@/middlewares/cryptoMiddleware';
+
+// 创建 Axios 实例
+const apiClient = axios.create({
+    baseURL: process.env.BaseURL,
+});
+
+// 添加请求拦截器
+apiClient.interceptors.request.use(cryptoMiddleware, (error) => {
+    return Promise.reject(error);
+});
+
 
 // 定义一个接口，描述你的数据对象的结构
 interface Item {
@@ -51,7 +63,7 @@ const fetchSearchResults = async (keyword: string, page = "1", size = 10) => {
     }
 
     try {
-        const response = await axios.post(`${BaseURL}/api/query/ole/search`, {
+        const response = await apiClient.post(`${BaseURL}/api/query/ole/search`, {
             keyword,
             page,
             size
@@ -73,7 +85,7 @@ const fetchKeywordSuggestions = async (keyword: string) => {
 
     try {
         // console.log(`Sending POST request to /api/query/ole/keyword with keyword: ${keyword}`);
-        const response = await axios.post(`${BaseURL}/api/query/ole/keyword`, {
+        const response = await apiClient.post(`${BaseURL}/api/query/ole/keyword`, {
             keyword
         });
         return response.data.data.flatMap((item: DataItem) => item.words);
@@ -86,7 +98,7 @@ const fetchKeywordSuggestions = async (keyword: string) => {
 // 获取视频详情
 const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
     try {
-        const response = await axios.post(`${BaseURL}/api/query/ole/detail`, { id });
+        const response = await apiClient.post(`${BaseURL}/api/query/ole/detail`, { id });
         const urls = response.data.data.urls;
 
         if (!Array.isArray(urls)) {
@@ -107,27 +119,32 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
     }
 };
 
+let cachedPublicKey: string | null = null;
 // 获取公钥
 const getPublicKey = async (): Promise<string> => {
+    if (cachedPublicKey) {
+        return cachedPublicKey;
+    }
+
     try {
-        const res = await fetch(`${BaseURL}/api/crypto/get`);
-        const data = await res.json() as { status: string; public_key: string };
-
-        if (data.status !== 'success') {
-            console.error('Failed to fetch public key:', data);
+        const response = await axios.get(`${BaseURL}/api/crypto/getPublicKey`);
+        const publicKey = response.data.public_key;
+        if (!publicKey) {
+            throw new Error('Public key not found');
         }
-
-        return data.public_key;
+        cachedPublicKey = publicKey; // 缓存公钥
+        return publicKey;
     } catch (error) {
         console.error('Error fetching public key:', error);
         throw error;
     }
 };
 
+
 // 获取趋势数据
 const fetchTrending = async (period: string, typeID: number) => {
     try {
-        const response = await axios.post(`${BaseURL}/api/trending/${period}/trend`, {
+        const response = await apiClient.post(`${BaseURL}/api/trending/${period}/trend`, {
             params: { "typeID": typeID }
         });
         return response.data.data;
@@ -140,7 +157,7 @@ const fetchTrending = async (period: string, typeID: number) => {
 // 获取 v2 版本的趋势数据
 const fetchTrendingV2 = async (typeID: number, count: Optional<number> = 10) => {
     try {
-        const response = await axios.post(`${BaseURL}/api/trending/v2/${typeID}?amount=${count}`, {});
+        const response = await apiClient.post(`${BaseURL}/api/trending/v2/${typeID}?amount=${count}`, {});
         return response.data.data;
     } catch (error) {
         console.error('Error fetching trending data:', error);
