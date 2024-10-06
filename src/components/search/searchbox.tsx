@@ -18,7 +18,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
     useEffect(() => {
         const precheckRequest = async () => {
             try {
-                await fetchKeywordSuggestions('心动的信号'); // 试探性调用
+                await fetchKeywordSuggestions('Yuki Forever💗'); // 试探性调用
                 // 可以在此处理成功的预检请求
             } catch (error) {
                 // 如果需要，可以在此处理错误
