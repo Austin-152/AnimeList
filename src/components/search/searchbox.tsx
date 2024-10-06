@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { AutoComplete, Input, Alert, notification } from 'antd';
 import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
@@ -14,6 +14,20 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
     const [searchValue, setSearchValue] = useState<string>(''); // 追踪搜索框中的值
     const [isComposing, setIsComposing] = useState<boolean>(false); // 追踪输入法状态
     const router = useRouter();
+
+    useEffect(() => {
+        const precheckRequest = async () => {
+            try {
+                await fetchKeywordSuggestions('心动的信号'); // 试探性调用
+                // 可以在此处理成功的预检请求
+            } catch (error) {
+                // 如果需要，可以在此处理错误
+                console.error('Precheck request failed:', error);
+            }
+        };
+
+        precheckRequest();
+    }, []);
 
     // 处理搜索建议，防抖包装
     const debouncedSearch = debounce(async (value: string) => {
