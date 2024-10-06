@@ -70,6 +70,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
         }
     };
 
+
     return (
         <>
             <AutoComplete
