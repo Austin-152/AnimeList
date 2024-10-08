@@ -5,7 +5,7 @@ const BaseURL = process.env.BaseURL; // 确保环境变量正确
 const getPublicKey = async (): Promise<string> => {
     try {
         const response = await axios.options(`${BaseURL}/api/crypto/getPublicKey`);
-        const publicKey = response.data.public_key; // 假设公钥从返回数据中获取
+        const publicKey = response.data; // 假设公钥从返回数据中获取
         if (!publicKey) {
             throw new Error('Public key not found');
         }
