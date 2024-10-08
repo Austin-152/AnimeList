@@ -20,6 +20,7 @@ export default async function handler(
 
         try {
             const key = forge.pki.publicKeyFromPem(publicKey);
+            console.log('Data:', JSON.stringify(data));
             const encryptedData = key.encrypt(forge.util.encodeUtf8(JSON.stringify(data)), 'RSA-OAEP');
 
             res.status(200).json({ encryptedData: forge.util.encode64(encryptedData) });
