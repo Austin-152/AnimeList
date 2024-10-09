@@ -1,12 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import "tailwindcss/tailwind.css";
+import Image from "next/image";
 
 const NotFound: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100">
       {/* 图片 */}
-      <img
+      <Image
         src="/notFound.svg"
         alt="Page Not Found"
         className="w-64 h-64 mb-8 animate-bounce"
