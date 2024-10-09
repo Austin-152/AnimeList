@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {encryptDataUtil} from "@/lib/crypto";
 
 const BaseURL = process.env.BaseURL; // 确保环境变量正确
 
@@ -55,13 +56,13 @@ const getPublicKey = async (): Promise<string> => {
 
 // 加密数据并通过 API 路由进行处理
 const encryptData = async (data: any, publicKey: string) => {
-    const response = await axios.post('/api/encryptData', {
-        data,
-        publicKey,
-    });
-    return response.data.encryptedData;
-};
+    const dataToEncrypt = {
+        data: data,
+        publicKey: publicKey,
+    };
+    return encryptDataUtil(dataToEncrypt).encryptedData;
 
+}
 export const cryptoMiddleware = async (config: any) => {
     const publicKey = await getPublicKey();
 
