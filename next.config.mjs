@@ -48,6 +48,8 @@ const nextConfig = {
   },
   webpack(config, { isServer }) {
     if (!isServer) {
+      config.output.filename = 'static/custom-js/[name].js';
+      config.output.chunkFilename = 'static/external/[name].js';
       config.optimization.minimizer.push(
         new TerserPlugin({
           terserOptions: {
