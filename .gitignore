@@ -26,6 +26,20 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+.idea
+.idea/*
+.idea/.gitkeep
+
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# next.js
+.next
+.next/*
+
 # local env files
 .env*.local
 
