@@ -15,19 +15,19 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ placeholder = "Search..." 
     const [isComposing, setIsComposing] = useState<boolean>(false); // 追踪输入法状态
     const router = useRouter();
 
-    // const precheckRequest = async () => {
-    //         try {
-    //             await fetchKeywordSuggestions('Yuki Forever💗'); // 试探性调用
-    //             // 可以在此处理成功的预检请求
-    //         } catch (error) {
-    //             // 如果需要，可以在此处理错误
-    //             console.error('Precheck request failed:', error);
-    //         }
-    //     };
+    const precheckRequest = async () => {
+            try {
+                await fetchKeywordSuggestions('Yuki Forever💗'); // 试探性调用
+                // 可以在此处理成功的预检请求
+            } catch (error) {
+                // 如果需要，可以在此处理错误
+                console.error('Precheck request failed:', error);
+            }
+        };
 
-    // useEffect(() => {
-    //     precheckRequest().then(r => r);
-    // }, []);
+    useEffect(() => {
+        precheckRequest().then(r => r);
+    }, []);
 
     // 处理搜索建议，防抖包装
     const debouncedSearch = debounce(async (value: string) => {
