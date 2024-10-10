@@ -11,6 +11,7 @@ import ProfileCard from "@/components/ui/ProfileCard"; // 导入个人资料组�
  * @returns {JSX.Element} The SVG element.
  */
 
+
 function FanIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -144,6 +145,8 @@ export default function Navbar(): JSX.Element {
   };
 
   const refreshUserData = useRefreshUserData();
+
+
 
   return (
     <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
