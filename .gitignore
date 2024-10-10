@@ -17,6 +17,10 @@ bun.lockb
 # production
 /build
 
+.idea
+.next
+.idea/*
+*.xml
 # misc
 .DS_Store
 *.pem
