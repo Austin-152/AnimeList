@@ -149,7 +149,7 @@ export default function Navbar(): JSX.Element {
 
 
   return (
-    <header className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
+    <div className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-6">
         <Link className="flex items-center gap-2 font-bold text-lg" href="/">
           <FanIcon className="w-6 h-6" />
@@ -239,6 +239,6 @@ export default function Navbar(): JSX.Element {
         <MenuIcon className="w-6 h-6" />
         <span className="sr-only">Toggle menu</span>
       </Button>
-    </header>
+    </div>
   );
 }
