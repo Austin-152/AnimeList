@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { randomBytes } from 'node:crypto';
 import WebpackObfuscator from 'webpack-obfuscator';
+import {process} from "node:process";
 import TerserPlugin from 'terser-webpack-plugin';
 
 dotenv.config();
@@ -16,7 +17,7 @@ const nextConfig = {
     '@ant-design/pro-utils', 'rc-pagination', 'rc-picker'
   ],
   env: {
-    BaseURL: process.env.NEXT_PUBLIC_BASE_URL,
+    BaseURL: process.env.NEXT_PUBLIC_BASE_URL || 'https://animeapi.rypro.me',
     LogtoCallback: process.env.LOGTO_CALLBACK_URL || 'https://anime.tzpro.xyz',
     LogtoAppId: process.env.LOGTO_APP_ID || '607i5yfqohw99j66f1p3a',
     LogtoAppSecret: process.env.LOGTO_APP_SECRET || '9zXP71NQN3D8goUXqHpG6eIyo9aFr7yn',
