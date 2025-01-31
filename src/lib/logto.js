@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import { LogtoClient } from '@logto/node';
 import { require } from 'node:module';
-import { process } from 'node:process';
 require('dotenv').config()
 dotenv.config();
 

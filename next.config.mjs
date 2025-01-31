@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import { randomBytes } from 'node:crypto';
 import WebpackObfuscator from 'webpack-obfuscator';
-import {process} from "node:process";
 import TerserPlugin from 'terser-webpack-plugin';
 
 dotenv.config();
