@@ -1,6 +1,9 @@
-import LogtoClient from '@logto/next';
 import dotenv from "dotenv";
+import { LogtoClient } from '@logto/node';
+import { require } from 'node:module';
+import { process } from 'node:process';
 require('dotenv').config()
+dotenv.config();
 
 export const logtoClient = new LogtoClient({
     endpoint: process.env.LOGTO_ENDPOINT,
