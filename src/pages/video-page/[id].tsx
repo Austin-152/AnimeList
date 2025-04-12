@@ -32,7 +32,7 @@ const VideoPage = () => {
             }
         };
 
-        fetchData();
+        fetchData().then(r => r);
     }, [id]);
 
     const handleVideoClick = (url: string) => {
@@ -57,7 +57,7 @@ const VideoPage = () => {
                         />
                     ) : currentVideo ? (
                         <iframe
-                            src={`https://www.hlsplayer.net/embed?type=m3u8&src=${currentVideo}`}
+                            src={`https://m3u8player.org/player.html?url=${currentVideo}`}
                             allowFullScreen
                             className="w-full h-full rounded-lg shadow-lg"
                         />

@@ -18,8 +18,8 @@ const nextConfig = {
   env: {
     BaseURL: process.env.NEXT_PUBLIC_BASE_URL || 'https://animeapi.rypro.me',
     LogtoCallback: process.env.LOGTO_CALLBACK_URL || 'https://anime.tzpro.xyz',
-    LogtoAppId: process.env.LOGTO_APP_ID || '607i5yfqohw99j66f1p3a',
-    LogtoAppSecret: process.env.LOGTO_APP_SECRET || '9zXP71NQN3D8goUXqHpG6eIyo9aFr7yn',
+    LogtoAppId: process.env.LOGTO_APP_ID,
+    LogtoAppSecret: process.env.LOGTO_APP_SECRET,
     LogtoEndpoint: process.env.LOGTO_ENDPOINT || 'https://auth.tzpro.xyz/oidc/auth',
     CookieSecret: process.env.COOKIE_SECRET || randomBytes(32).toString('hex'),
   },

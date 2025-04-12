@@ -46,14 +46,14 @@
   // );
 
   import { logtoClient } from '@/lib/logto';
-import type { NextApiRequest, NextApiResponse } from 'next';
+  import type { NextApiRequest, NextApiResponse } from 'next';
   import { filterClaims } from "@/utils/userInfoFilter";
 
-export default logtoClient.withLogtoApiRoute((request: NextApiRequest, response: NextApiResponse) => {
-  if (!request.user.isAuthenticated) {
-    response.status(401).json({ message: 'Unauthorized' });
-    return;
-  }
+  export default logtoClient.withLogtoApiRoute((request: NextApiRequest, response: NextApiResponse) => {
+    if (!request.user.isAuthenticated) {
+      response.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
 
   const responseData = {
     data: request.user.claims,

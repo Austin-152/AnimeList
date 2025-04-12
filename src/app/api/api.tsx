@@ -111,7 +111,6 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
             index: idx + 1,
         }));
 
-        console.log('Mapped video details:', videoDetails);
         return videoDetails;
     } catch (error) {
         console.error('Error fetching video details:', error);
