@@ -16,7 +16,7 @@
 bun.lockb
 # production
 /build
-
+.env.production
 .idea
 .next
 .idea/*

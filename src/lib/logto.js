@@ -9,6 +9,6 @@ export const logtoClient = new LogtoClient({
     appId: process.env.LOGTO_APP_ID,
     appSecret: process.env.LOGTO_APP_SECRET,
     baseUrl: process.env.LOGTO_CALLBACK_URL,
-    cookieSecret: process.env.COOKIE_SECRET,
+    cookieSecret: process.env.COOKIE_SECRET || 'default_secret',
     cookieSecure: process.env.NODE_ENV === 'production',
 });
