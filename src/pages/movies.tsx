@@ -6,6 +6,7 @@ import Footer from '@/components/footer';
 import TrendingList from "@/components/trends";
 import { fetchTrendingV2, Item } from "@/app/api/api";
 import 'tailwindcss/tailwind.css';
+import Image from 'next/image';
 
 interface Movie {
   id: string;
@@ -108,7 +109,7 @@ export default function Movies(): JSX.Element {
             <span>📅</span> Latest Release
           </button>
           <button className="flex items-center gap-2 px-5 py-2 bg-white rounded-lg shadow hover:shadow-md transition-all">
-            <span>🔤</span> A-Z
+            <span>🔥</span> A-Z
           </button>
           <button className="flex items-center gap-2 px-5 py-2 bg-white rounded-lg shadow hover:shadow-md transition-all">
             <span>🎭</span> Most Popular
@@ -139,7 +140,7 @@ export default function Movies(): JSX.Element {
           </div>
         ) : movies.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
-            <div className="text-6xl mb-4">🎞️</div>
+            <div className="text-6xl mb-4">🧞‍♂️</div>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">No movies found</h3>
             <p className="text-gray-600">Try adjusting your filters or check back later!</p>
           </div>
@@ -151,9 +152,11 @@ export default function Movies(): JSX.Element {
                   <div className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-105">
                     <div className="aspect-[2/3] bg-gradient-to-br from-indigo-200 to-purple-200">
                       {movie.coverImage && (
-                        <img
+                        <Image
                           src={movie.coverImage}
                           alt={movie.title}
+                          width={400}
+                          height={600}
                           className="w-full h-full object-cover"
                         />
                       )}

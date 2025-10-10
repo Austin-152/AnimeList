@@ -1,253 +1,260 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { SearchBox } from '@/components/search/searchbox';
-import Navbar from '@/components/nav';
-import Footer from '@/components/footer';
-import 'tailwindcss/tailwind.css';
+import React, { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import Navbar from '@/components/nav'
+import Footer from '@/components/footer'
+import { SearchBox } from '@/components/search/searchbox'
+import { fetchTrending } from '@/app/api/api'
+import type { Item } from '@/app/api/api'
+import { useRouter } from 'next/router'
 
-interface Series {
-  id: string;
-  title: string;
-  coverImage: string;
-  rating?: number;
-  year?: string;
-  episodes?: number;
-  status?: 'Ongoing' | 'Completed' | 'Upcoming';
-  season?: string;
+// Periods follow API: day/week/month/all
+type Period = 'day' | 'week' | 'month' | 'all'
+// Subtype for Series page: 2=电视剧, 4=动漫
+type SubType = 2 | 4
+
+const PERIOD_TABS: { key: Period; label: string }[] = [
+  { key: 'day', label: '日榜' },
+  { key: 'week', label: '周榜' },
+  { key: 'month', label: '月榜' },
+  { key: 'all', label: '总榜' },
+]
+
+const SUBTYPE_TABS: { key: SubType; label: string }[] = [
+  { key: 2, label: '连续剧' },
+  { key: 4, label: '动漫' },
+]
+
+const Fire = () => <span aria-label="热度" title="热度">🔥</span>
+
+function useQueryState() {
+  const router = useRouter()
+  const [period, setPeriod] = useState<Period>('day')
+  const [subtype, setSubtype] = useState<SubType>(2)
+
+  // initialize from URL
+  useEffect(() => {
+    if (!router.isReady) return
+    const qPeriod = String(router.query.period || '').toLowerCase()
+    const qSub = Number(router.query.subtype)
+
+    if (qPeriod && ['day', 'week', 'month', 'all'].includes(qPeriod)) {
+      setPeriod(qPeriod as Period)
+    }
+    if (!Number.isNaN(qSub) && [2, 4].includes(qSub)) {
+      setSubtype(qSub as SubType)
+    }
+  }, [router.isReady, router.query.period, router.query.subtype])
+
+  // write to URL
+  useEffect(() => {
+    if (!router.isReady) return
+    const nextQuery = { period, subtype }
+    const curPeriod = String(router.query.period || 'day')
+    const curSubtype = Number(router.query.subtype || 2)
+    if (curPeriod === period && curSubtype === subtype) return
+    router.replace(
+      { pathname: router.pathname, query: nextQuery },
+      undefined,
+      { shallow: true }
+    ).then(() => {})
+  }, [period, subtype, router])
+
+  return { period, setPeriod, subtype, setSubtype }
 }
 
 export default function Series() {
-  const [series, setSeries] = useState<Series[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<string>('All');
+  const { period, setPeriod, subtype, setSubtype } = useQueryState()
+
+  const [items, setItems] = useState<Item[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // TODO: Replace with your actual API call
-    const fetchSeries = async () => {
+    let cancel = false
+    const load = async () => {
       try {
-        // const response = await fetch('/api/series');
-        // const data = await response.json();
-        // setSeries(data);
-
-        // Placeholder for now
-        setSeries([]);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to load series');
-        setLoading(false);
+        setLoading(true)
+        setError(null)
+        const data = await fetchTrending(period, subtype)
+        if (cancel) return
+        setItems(Array.isArray(data) ? (data as Item[]) : [])
+      } catch (e: any) {
+        if (cancel) return
+        setError(e?.message || '获取剧集数据失败')
+        setItems([])
+      } finally {
+        if (!cancel) setLoading(false)
       }
-    };
+    }
+    load().then(r => r)
+    return () => {
+      cancel = true
+    }
+  }, [period, subtype])
 
-    fetchSeries();
-  }, [filter]);
+  const totalHits = useMemo(() => items.reduce((s, it) => s + (Number(it.hits) || 0), 0), [items])
 
-  const statusFilters = ['All', 'Ongoing', 'Completed', 'Upcoming'];
+  const getImageUrl = (pic?: string) => {
+    if (!pic) return '/placeholder.svg'
+    return pic.startsWith('http') ? pic : `https://www.olevod.tv/${pic}`
+  }
+
+  const top = items[0]
+  const rest = items.slice(1, 20)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-blue-50">
+    <div className="min-h-screen bg-gray-950 text-gray-100">
       <Navbar />
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white py-16 md:py-24 px-4 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 right-20 w-80 h-80 bg-green-400 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-          <div className="absolute bottom-10 left-20 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-5xl">📺</span>
-            <h1 className="text-4xl md:text-6xl font-bold">Anime Series</h1>
+      {/* HERO */}
+      <section className="relative overflow-hidden py-12 md:py-16">
+        <div className="absolute inset-0 hero-grid opacity-30" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-950/20 via-gray-950/40 to-gray-950/80" />
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <span className="text-3xl">📺</span>
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">剧集榜</h1>
           </div>
-          <p className="text-lg md:text-xl text-teal-100 max-w-2xl mb-8">
-            Dive into captivating anime series. Follow your favorite characters through epic storylines and adventures.
-          </p>
-          <SearchBox placeholder="Search for series..." />
-        </div>
-      </section>
 
-      {/* Status Filter Section */}
-      <section className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <span>📊</span> Filter by Status
-          </h2>
-          <div className="flex flex-wrap gap-3">
-            {statusFilters.map((status) => (
+          {/* Period */}
+          <div className="flex items-center justify-center gap-3 text-sm text-gray-300">
+            {PERIOD_TABS.map((t) => (
               <button
-                key={status}
-                onClick={() => setFilter(status)}
-                className={`px-6 py-2 rounded-full font-semibold transition-all shadow-md ${
-                  filter === status
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                key={t.key}
+                onClick={() => setPeriod(t.key)}
+                className={`px-3 py-1.5 rounded-full border transition ${
+                  period === t.key
+                    ? 'bg-fuchsia-600 border-fuchsia-500 text-white shadow-lg shadow-fuchsia-600/30'
+                    : 'bg-white/5 border-white/15 hover:bg-white/10'
                 }`}
               >
-                {status === 'Ongoing' && '🔄 '}
-                {status === 'Completed' && '✅ '}
-                {status === 'Upcoming' && '🔜 '}
-                {status}
+                {t.label}
               </button>
             ))}
           </div>
-        </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">🔄</div>
-              <div>
-                <div className="text-2xl font-bold text-emerald-600">120+</div>
-                <div className="text-sm text-gray-600">Ongoing</div>
-              </div>
-            </div>
+          {/* Subtype */}
+          <div className="mt-4 flex items-center justify-center gap-2 text-sm">
+            {SUBTYPE_TABS.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => setSubtype(t.key)}
+                className={`px-3 py-1.5 rounded-full border transition ${
+                  subtype === t.key
+                    ? 'bg-sky-600 border-sky-500 text-white shadow-lg shadow-sky-600/30'
+                    : 'bg-white/5 border-white/15 hover:bg-white/10'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
-          <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">✅</div>
-              <div>
-                <div className="text-2xl font-bold text-teal-600">500+</div>
-                <div className="text-sm text-gray-600">Completed</div>
-              </div>
-            </div>
+
+          <div className="mt-6 max-w-xl mx-auto">
+            <SearchBox placeholder="搜索你关心的剧集 / 动漫…" />
           </div>
-          <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">🔜</div>
-              <div>
-                <div className="text-2xl font-bold text-cyan-600">25+</div>
-                <div className="text-sm text-gray-600">Upcoming</div>
-              </div>
+
+          {/* Stats */}
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+            <div className="glass-card rounded-xl p-4 border border-white/10">
+              <div className="text-gray-400">条目</div>
+              <div className="text-lg font-semibold">{loading ? '—' : items.length}</div>
             </div>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">🎬</div>
-              <div>
-                <div className="text-2xl font-bold text-blue-600">10K+</div>
-                <div className="text-sm text-gray-600">Episodes</div>
-              </div>
+            <div className="glass-card rounded-xl p-4 border border-white/10">
+              <div className="text-gray-400">累计热度</div>
+              <div className="text-lg font-semibold">{loading ? '—' : totalHits.toLocaleString()}</div>
+            </div>
+            <div className="glass-card rounded-xl p-4 border border-white/10">
+              <div className="text-gray-400">时间窗口</div>
+              <div className="text-lg font-semibold">{PERIOD_TABS.find((p) => p.key === period)?.label}</div>
+            </div>
+            <div className="glass-card rounded-xl p-4 border border-white/10">
+              <div className="text-gray-400">分类</div>
+              <div className="text-lg font-semibold">{subtype === 2 ? '连续剧' : '动漫'}</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Series Grid Section */}
-      <section className="max-w-7xl mx-auto px-4 pb-16">
+      {/* CONTENT */}
+      <section className="max-w-6xl mx-auto px-4 md:px-6 pb-16">
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {[...Array(10)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-300 rounded-xl aspect-[2/3] mb-3"></div>
-                <div className="bg-gray-300 h-4 rounded mb-2"></div>
-                <div className="bg-gray-300 h-3 rounded w-2/3"></div>
-              </div>
+          <div className="grid grid-cols-1 gap-5">
+            {Array.from({ length: 1 }).map((_, i) => (
+              <div key={i} className="rounded-2xl border border-white/10 bg-white/5 h-72 animate-pulse" />
             ))}
+            <div className="rounded-2xl border border-white/10 bg-white/5 h-96 animate-pulse" />
           </div>
         ) : error ? (
-          <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
-            <div className="text-6xl mb-4">📺</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">Unable to load series</h3>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <button className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-full font-semibold hover:shadow-lg transition-all">
-              Try Again
-            </button>
+          <div className="text-center py-20">
+            <div className="text-5xl mb-3">😢</div>
+            <h3 className="text-2xl font-bold mb-2">加载失败</h3>
+            <p className="text-gray-400">{error}</p>
           </div>
-        ) : series.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
-            <div className="text-6xl mb-4">📺</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">No series found</h3>
-            <p className="text-gray-600">Try adjusting your filters or check back later!</p>
+        ) : items.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="text-5xl mb-3">🔍</div>
+            <h3 className="text-2xl font-bold mb-2">暂无数据</h3>
+            <p className="text-gray-400">稍后再来看看新的趋势吧～</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {series.map((item) => (
-              <Link key={item.id} href={`/video-page/${item.id}`}>
-                <div className="group cursor-pointer">
-                  <div className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-105">
-                    <div className="aspect-[2/3] bg-gradient-to-br from-emerald-200 to-teal-200">
-                      {item.coverImage && (
-                        <img
-                          src={item.coverImage}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)] gap-6">
+            {/* Top with cover */}
+            {top && (
+              <Link href={`/video-page/${top.id}`} className="block">
+                <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                  <div className="flex gap-4 p-4">
+                    <div className="relative w-24 h-36 md:w-28 md:h-40 rounded-lg overflow-hidden border border-white/10 flex-shrink-0">
+                      <Image
+                        src={getImageUrl(top.picThumb || top.pic)}
+                        alt={top.name}
+                        fill
+                        sizes="112px"
+                        className="object-cover"
+                      />
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <div className="flex items-center gap-2 text-white text-sm">
-                          {item.episodes && (
-                            <span className="flex items-center gap-1">
-                              📺 {item.episodes} eps
-                            </span>
-                          )}
-                        </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="inline-flex items-center justify-center w-6 h-6 rounded bg-fuchsia-600 text-xs font-bold mr-2">1</div>
+                      <span className="font-semibold text-lg align-middle line-clamp-1">{top.name}</span>
+                      <div className="mt-1 text-sm text-gray-300 line-clamp-2">{top.blurb || '—'}</div>
+                      <div className="mt-2 text-xs text-gray-400 flex items-center gap-1">
+                        <Fire /> {Number(top.hits || 0).toLocaleString()}
                       </div>
                     </div>
-                    {item.status && (
-                      <div className={`absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-bold ${
-                        item.status === 'Ongoing' ? 'bg-green-500 text-white' :
-                        item.status === 'Completed' ? 'bg-blue-500 text-white' :
-                        'bg-orange-500 text-white'
-                      }`}>
-                        {item.status === 'Ongoing' && '🔄 '}
-                        {item.status === 'Completed' && '✅ '}
-                        {item.status === 'Upcoming' && '🔜 '}
-                        {item.status}
-                      </div>
-                    )}
-                    {item.rating && (
-                      <div className="absolute top-2 right-2 bg-yellow-400 text-gray-900 px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
-                        ⭐ {item.rating}
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="mt-3 font-semibold text-gray-800 line-clamp-2 group-hover:text-emerald-600 transition-colors">
-                    {item.title}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-                    {item.year && <span>{item.year}</span>}
-                    {item.season && <span>• {item.season}</span>}
                   </div>
                 </div>
               </Link>
-            ))}
+            )}
+
+            {/* List 2..20 */}
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+              <ol className="divide-y divide-white/10">
+                {rest.map((it, idx) => (
+                  <li key={it.id}>
+                    <Link href={`/video-page/${it.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-white/5">
+                      <div
+                        className={`inline-flex items-center justify-center w-5 h-5 rounded text-[11px] font-bold ${
+                          idx + 2 === 2 ? 'bg-orange-500' : idx + 2 === 3 ? 'bg-amber-500' : 'bg-gray-600'
+                        }`}
+                      >
+                        {idx + 2}
+                      </div>
+                      <div className="min-w-0 flex-1 text-sm line-clamp-1">{it.name}</div>
+                      <div className="text-xs text-gray-400 flex items-center gap-1">
+                        <Fire /> {Number(it.hits || 0).toLocaleString()}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         )}
       </section>
 
-      {/* Benefits Section */}
-      <section className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">Why Watch Anime Series?</h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-white text-center">
-              <div className="text-4xl mb-3">📖</div>
-              <h3 className="text-lg font-bold mb-2">Deep Storylines</h3>
-              <p className="text-teal-100 text-sm">Immerse yourself in complex narratives that develop over multiple episodes.</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-white text-center">
-              <div className="text-4xl mb-3">👥</div>
-              <h3 className="text-lg font-bold mb-2">Character Growth</h3>
-              <p className="text-teal-100 text-sm">Watch characters evolve and develop throughout their journey.</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-white text-center">
-              <div className="text-4xl mb-3">🌍</div>
-              <h3 className="text-lg font-bold mb-2">World Building</h3>
-              <p className="text-teal-100 text-sm">Explore richly detailed worlds with intricate lore and history.</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-white text-center">
-              <div className="text-4xl mb-3">💫</div>
-              <h3 className="text-lg font-bold mb-2">Weekly Episodes</h3>
-              <p className="text-teal-100 text-sm">Join the community in anticipation of each new episode release.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Footer />
     </div>
-  );
+  )
 }

@@ -44,6 +44,18 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.olevod.tv',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'olevod.tv',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   webpack(config, { isServer }) {

@@ -141,11 +141,24 @@ const getPublicKey = async (): Promise<string> => {
 
 
 // 获取趋势数据
-const fetchTrending = async (period: string, typeID: number) => {
+const fetchTrending = async (period: string, typeID?: Optional<number>) => {
     try {
-        const response = await apiClient.post(`${BaseURL}/api/trending/${period}/trend`, {
-            params: { "typeID": typeID }
-        });
+        let url = '';
+        let body: any = {};
+
+        if (period === 'all') {
+            if (typeof typeID !== 'number') {
+                // 后端要求 all 场景需要具体的 typeID
+                return [];
+            }
+            url = `${BaseURL}/api/trending/all/${typeID}`;
+            body = {};
+        } else {
+            url = `${BaseURL}/api/trending/${period}/trend`;
+            body = typeof typeID === 'number' ? { params: { typeID } } : {};
+        }
+
+        const response = await apiClient.post(url, body);
         return response.data.data;
     } catch (error) {
         console.error('Error fetching trending data:', error);
