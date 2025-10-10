@@ -54,7 +54,7 @@ export default function Trending() {
             <h1 className="text-4xl md:text-6xl font-bold">Trending Now</h1>
           </div>
           <p className="text-lg md:text-xl text-purple-100 max-w-2xl mb-8">
-            Discover what's hot in the anime world right now. The most popular series everyone is watching.
+            Discover what&apos;s hot in the anime world right now. The most popular series everyone is watching.
           </p>
           <SearchBox placeholder="Search trending anime..." />
         </div>

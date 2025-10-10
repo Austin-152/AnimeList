@@ -67,12 +67,12 @@ export default function Report() {
             </div>
             <h2 className="text-3xl font-bold text-gray-800 mb-4">Report Submitted Successfully!</h2>
             <p className="text-lg text-gray-600 mb-8">
-              Thank you for helping us improve. We'll review your report and take appropriate action.
+              Thank you for helping us improve. We&apos;ll review your report and take appropriate action.
             </p>
             <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-6 mb-8">
               <p className="text-sm text-gray-700">
                 <strong>What happens next?</strong><br />
-                Our team will review your report within 24-48 hours. If we need more information, we'll contact you via email.
+                Our team will review your report within 24-48 hours. If we need more information, we&apos;ll contact you via email.
               </p>
             </div>
             <button
@@ -264,7 +264,7 @@ export default function Report() {
                 placeholder="your.email@example.com"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors"
               />
-              <p className="text-sm text-gray-500 mt-2">We'll only use this to follow up on your report.</p>
+              <p className="text-sm text-gray-500 mt-2">We&apos;ll only use this to follow up on your report.</p>
             </div>
 
             {/* Submit Button */}

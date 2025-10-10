@@ -90,7 +90,7 @@ export function Index() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-gray-800">Fast Updates</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Get the latest episodes and movies as soon as they're released. Never miss out on your favorite series.
+                  Get the latest episodes and movies as soon as they&apos;re released. Never miss out on your favorite series.
                 </p>
               </div>
 
