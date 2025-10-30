@@ -163,7 +163,7 @@ export default function Navbar(): JSX.Element {
       </div>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
         {userData && !error ? (
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative z-50" ref={dropdownRef}>
             <button onClick={toggleDropdown} className="flex items-center gap-2">
               <Image
                 src={userData.picture || 'https://avatars.githubusercontent.com/u/60091116?v=4'} // Use default or user avatar
