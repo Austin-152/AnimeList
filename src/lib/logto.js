@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import LogtoClient from '@logto/next';
 import { require } from 'node:module';
-require('dotenv').config()
 dotenv.config();
 
 export const logtoClient = new LogtoClient({

@@ -1,6 +1,6 @@
-import { Optional } from "@silverhand/essentials";
+import {Optional} from "@silverhand/essentials";
 import axios from 'axios';
-import { cryptoMiddleware } from '@/middlewares/cryptoMiddleware';
+import {cryptoMiddleware} from '@/middlewares/cryptoMiddleware';
 
 // 创建 Axios 实例
 const apiClient = axios.create({
@@ -46,7 +46,6 @@ const checkLoginStatus = async (): Promise<boolean> => {
         return response.status === 200;
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
-            console.error('User not logged in');
             return false;
         }
         console.error('Error checking login status:', error);
@@ -105,13 +104,11 @@ const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
             console.error('Invalid response:', response.data);
         }
 
-        const videoDetails: VideoComponent[] = urls.map((item: { title: string; url: string }, idx: number) => ({
+        return urls.map((item: { title: string; url: string }, idx: number) => ({
             title: item.title,
-            url:  item.url,
+            url: item.url,
             index: idx + 1,
         }));
-
-        return videoDetails;
     } catch (error) {
         console.error('Error fetching video details:', error);
         throw error;
@@ -129,7 +126,7 @@ const getPublicKey = async (): Promise<string> => {
         const response = await axios.get(`${BaseURL}/api/crypto/getPublicKey`);
         const publicKey = response.data.public_key;
         if (!publicKey) {
-            throw new Error('Public key not found');
+            new Error('Public key not found');
         }
         cachedPublicKey = publicKey; // 缓存公钥
         return publicKey;
