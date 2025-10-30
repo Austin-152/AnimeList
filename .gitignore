@@ -28,3 +28,4 @@ coverage/**
 logs/
 logs/**
 *.log
+bun.lockb
