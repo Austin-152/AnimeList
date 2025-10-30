@@ -65,13 +65,14 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
  * @param {string} url - API endpoint.
  * @returns {Promise<any>} The fetched data.
  */
-const fetcher = async (url: string): Promise<any> => {
+const fetcher = async (url: string): Promise<{status: number; data: any}> => {
   try {
     const response = await fetch(url);
+    const data = await response.json();
     if (!response.ok) {
         new Error(`HTTP error! status: ${response.status}`);
     }
-    return response.json();
+    return {status: response.status, data};
   } catch (error) {
     console.error("Fetch error:", error);
     throw error;
@@ -103,11 +104,14 @@ export default function Navbar(): JSX.Element {
   };
 
   // Fetch user data using SWR
-  const { data: userData, error } = useSWR('/api/getUserInfo', fetcher, {
+  const { data: userResponse, error } = useSWR('/api/getUserInfo', fetcher, {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
     shouldRetryOnError: true,
   });
+
+  const  isSussess = userResponse?.status === 200;
+  const  userData = userResponse?.data;
 
   //个人信息卡片
   const handleOpenProfile = () => {
@@ -162,7 +166,7 @@ export default function Navbar(): JSX.Element {
         <Link href="/report" className="text-white hover:bg-gray-700 rounded px-3 py-2">Report</Link>
       </div>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
-        {userData && !error ? (
+        {isSussess && userData && !error ? (
           <div className="relative z-50" ref={dropdownRef}>
             <button onClick={toggleDropdown} className="flex items-center gap-2">
               <Image
@@ -177,7 +181,7 @@ export default function Navbar(): JSX.Element {
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg">
                 <div className="p-4 border-b">
-                  <p className="text-sm text-gray-700">{userData.name}</p>
+                  <p className="text-sm text-gray-500">{userData.name}</p>
                   <p className="text-sm text-gray-500">ID: {userData.sub}</p>
                 </div>
                 <div className="p-2">
