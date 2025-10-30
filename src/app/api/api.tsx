@@ -35,6 +35,11 @@ interface VideoComponent {
     index: number;
 }
 
+interface VideoDetailsResponse {
+    name: string;
+    urls: VideoComponent[];
+}
+
 const BaseURL = process.env.BaseURL; // 确保环境变量正确
 
 // 检查用户是否登录的函数
@@ -95,20 +100,24 @@ const fetchKeywordSuggestions = async (keyword: string) => {
 };
 
 // 获取视频详情
-const fetchVideoDetails = async (id: string): Promise<VideoComponent[]> => {
+const fetchVideoDetails = async (id: string): Promise<VideoDetailsResponse> => {
     try {
         const response = await apiClient.post(`${BaseURL}/api/query/ole/detail`, { id });
+        const data = response.data.data;
         const urls = response.data.data.urls;
 
         if (!Array.isArray(urls)) {
             console.error('Invalid response:', response.data);
         }
 
-        return urls.map((item: { title: string; url: string }, idx: number) => ({
-            title: item.title,
-            url: item.url,
-            index: idx + 1,
-        }));
+        return {
+            name: data.name, // 提取 name 字段
+            urls: urls.map((item: { title: string; url: string }, idx: number) => ({
+                title: item.title,
+                url: item.url,
+                index: idx + 1,
+            }))
+        };
     } catch (error) {
         console.error('Error fetching video details:', error);
         throw error;

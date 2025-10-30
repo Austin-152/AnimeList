@@ -166,7 +166,7 @@ export default function Navbar(): JSX.Element {
         <Link href="/report" className="text-white hover:bg-gray-700 rounded px-3 py-2">Report</Link>
       </div>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
-        {isSussess && userData && !error ? (
+        {isSussess && !error ? (
           <div className="relative z-50" ref={dropdownRef}>
             <button onClick={toggleDropdown} className="flex items-center gap-2">
               <Image

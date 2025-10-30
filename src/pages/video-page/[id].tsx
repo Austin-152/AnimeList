@@ -6,6 +6,7 @@ import { fetchVideoDetails } from '@/app/api/api'
 import Navbar from '@/components/nav'
 import Footer from '@/components/footer'
 import dynamic from 'next/dynamic'
+import Head from "next/head";
 
 const LottiePlayer = dynamic(() => import('@lottiefiles/react-lottie-player').then((m) => m.Player), { ssr: false })
 
@@ -14,6 +15,7 @@ const VideoPage = () => {
   const { id } = router.query
 
   const [videoDetails, setVideoDetails] = useState<{ title: string; url: string }[]>([])
+  const [videoName, setVideoName] = useState<string>('Loading...')
   const [loading, setLoading] = useState<boolean>(true)
   const [currentVideo, setCurrentVideo] = useState<string>('')
 
@@ -22,9 +24,10 @@ const VideoPage = () => {
       if (id) {
         try {
           const details = await fetchVideoDetails(id as string)
-          setVideoDetails(details)
-          if (details.length > 0) {
-            setCurrentVideo(details[0].url)
+          setVideoDetails(details.urls)
+            setVideoName(details.name)
+          if (details.urls.length > 0) {
+            setCurrentVideo(details.urls[0].url)
           }
         } catch (error) {
           console.error('Error fetching video details:', error)
@@ -47,6 +50,11 @@ const VideoPage = () => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-5 pb-20">
+      <Head>
+        <title>{videoName}</title>
+        <meta name="description" content="次世代免费动漫影像平台 - 极速 · 超清 · 智能发现" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <Navbar />
       <div className="max-w-4xl mx-auto mt-5">
         <div className="w-full h-[500px] mb-8 flex justify-center items-center">
