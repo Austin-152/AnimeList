@@ -8,6 +8,7 @@ dotenv.config();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+    reactCompiler: true,
   transpilePackages: [
     'kitchen-flow-editor', '@ant-design/pro-editor',
     'zustand', 'leva', '@ant-design/icons-svg', '@babel/runtime',
