@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, type JSX } from 'react';
 import Link from 'next/link';
 import { SearchBox } from '@/components/search/searchbox';
 import Navbar from '@/components/nav';

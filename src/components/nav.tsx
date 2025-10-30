@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import useSWR, { mutate } from 'swr';
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, type JSX } from "react";
 import Image from "next/image";
 import ProfileCard from "@/components/ui/ProfileCard"; // 导入个人资料组件
 
@@ -69,7 +69,7 @@ const fetcher = async (url: string): Promise<any> => {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        new Error(`HTTP error! status: ${response.status}`);
     }
     return response.json();
   } catch (error) {
