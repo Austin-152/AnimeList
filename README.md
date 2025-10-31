@@ -1,8 +1,8 @@
 # AnimeList
 
 Select your language:
-- English: README.en.md
-- 简体中文: README.zh-CN.md
+- English: [README.en.md](https://github.com/Austin-152/AnimeList/blob/main/README.en.md)
+- 简体中文: [README.zh-CN.md](https://github.com/Austin-152/AnimeList/blob/main/README.zh-CN.md)
 
 A modern Next.js 16 application for discovering and watching anime/videos with fast search, trending charts, an episode player, and Logto authentication.
 
