@@ -157,13 +157,13 @@ export default function Navbar(): JSX.Element {
       <div className="flex items-center gap-6">
         <Link className="flex items-center gap-2 font-bold text-lg" href="/">
           <FanIcon className="w-6 h-6" />
-          <span>Anime Hub</span>
+          <span>曼波影院</span>
         </Link>
         {/*<Link href="/" className="text-white hover:bg-gray-700 rounded px-3 py-2">Home</Link>*/}
-        <Link href="/trending" className="text-white hover:bg-gray-700 rounded px-3 py-2">Trending</Link>
-        <Link href="/movies" className="text-white hover:bg-gray-700 rounded px-3 py-2">Movies</Link>
-        <Link href="/series" className="text-white hover:bg-gray-700 rounded px-3 py-2">Series</Link>
-        <Link href="/report" className="text-white hover:bg-gray-700 rounded px-3 py-2">Report</Link>
+        <Link href="/trending" className="text-white hover:bg-gray-700 rounded px-3 py-2">热门</Link>
+        <Link href="/movies" className="text-white hover:bg-gray-700 rounded px-3 py-2">电影</Link>
+        <Link href="/series" className="text-white hover:bg-gray-700 rounded px-3 py-2">剧集</Link>
+        {/*<Link href="/report" className="text-white hover:bg-gray-700 rounded px-3 py-2">报告</Link>*/}
       </div>
       <nav className={`${isMenuOpen ? "flex" : "hidden"} md:flex items-center gap-6`}>
         {isSussess && !error ? (
