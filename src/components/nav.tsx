@@ -151,7 +151,6 @@ export default function Navbar(): JSX.Element {
   const refreshUserData = useRefreshUserData();
 
 
-
   return (
     <div className="bg-gray-950 text-gray-50 px-4 md:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-6">
