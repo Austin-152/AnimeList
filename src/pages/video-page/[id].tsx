@@ -1,3 +1,6 @@
+// ============================
+// File: src/pages/video-page/[id].tsx
+// ============================
 // Install deps:
 // npm i artplayer artplayer-plugin-danmuku hls.js js-cookie
 // (keep your existing: @lottiefiles/react-lottie-player)
@@ -69,19 +72,24 @@ const VideoPage: React.FC = () => {
         let destroyed = false
 
         const boot = async () => {
-            const [{ default: Artplayer }, { default: artplayerPluginDanmuku }] = await Promise.all([
+            // Load all in parallel to avoid import waterfall
+            const [
+                { default: Artplayer },
+                { default: artplayerPluginDanmuku },
+                { default: Hls },
+            ] = await Promise.all([
                 import('artplayer'),
                 import('artplayer-plugin-danmuku'),
+                import('hls.js'),
             ])
-            // Important: Hls default export is the constructor
-            const { default: Hls } = await import('hls.js')
 
             if (destroyed) return
 
             const existing = artRef.current as any
             if (existing) {
                 try {
-                    await existing.switchUrl(currentVideo, null, true)
+                    // switchUrl is synchronous; do not await
+                    existing.switchUrl(currentVideo, null, true)
                 } catch (e) {
                     try { existing.destroy(false) } catch {}
                     artRef.current = null
@@ -99,9 +107,20 @@ const VideoPage: React.FC = () => {
                     type: 'm3u8',
                     customType: {
                         m3u8: function (video: HTMLVideoElement, url: string, art: any) {
-                            if (Hls && typeof Hls.isSupported === 'function' && Hls.isSupported()) {
-                                const hls = new (Hls as any)()
+                            if (Hls && typeof (Hls as any).isSupported === 'function' && (Hls as any).isSupported()) {
+                                const hls = new (Hls as any)({
+                                    enableWorker: true,
+                                    lowLatencyMode: true,
+                                    backBufferLength: 30,
+                                    maxBufferLength: 10,
+                                    capLevelToPlayerSize: true,
+                                    startLevel: -1,
+                                    autoStartLoad: true,
+                                })
                                 hls.loadSource(url)
+                                hls.once((Hls as any).Events.MANIFEST_PARSED, () => {
+                                    try { art.play?.() } catch {}
+                                })
                                 hls.attachMedia(video)
                                 art.on('destroy', () => hls.destroy())
                             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -143,8 +162,9 @@ const VideoPage: React.FC = () => {
                             lockTime: 5,
                             theme: 'dark',
                             COLOR: [],
-                            beforeEmit() {
+                            beforeEmit(danmu: any) {
                                 return new Promise((resolve) => {
+                                    // TODO: persist danmaku to your backend
                                     setTimeout(() => resolve(true), 300)
                                 })
                             },
@@ -160,6 +180,12 @@ const VideoPage: React.FC = () => {
 
                 artRef.current = instance
             }
+
+            // Warm up next episode manifest (best-effort)
+            const nextUrl = hasNext ? videoDetails[currentIndex + 1]?.url : ''
+            if (nextUrl) {
+                try { fetch(nextUrl, { method: 'GET', mode: 'no-cors' as any }) } catch {}
+            }
         }
 
         boot()
@@ -171,7 +197,7 @@ const VideoPage: React.FC = () => {
                 artRef.current = null
             }
         }
-    }, [currentVideo, id])
+    }, [currentVideo, id, hasNext, currentIndex, videoDetails])
 
     const handleVideoClick = useCallback((url: string) => {
         if (!url) return
@@ -220,8 +246,8 @@ const VideoPage: React.FC = () => {
                 <title>{`${videoName} - ${videoDetails[0]?.title ?? ''}`}</title>
                 <meta name="description" content="次世代免费动漫影像平台 - 极速 · 超清 · 智能发现" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                {/* Artplayer styles (only needed if you haven't imported globally) */}
-                {/* Move Artplayer CSS to _app.tsx: import 'artplayer/dist/artplayer.css' */}
+                {/* Artplayer styles: import in _app.tsx */}
+                {/* import 'artplayer/dist/artplayer.css' */}
             </Head>
 
             <Navbar />
