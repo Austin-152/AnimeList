@@ -200,7 +200,7 @@ export default function Navbar(): JSX.Element {
                   </button>
                   <button
                       onClick={() => {
-                        alert("功能暂未开放 敬请期待!");
+                        alert("功能暂未开放 敬请期待");
                       }}
                       className="w-full text-left text-sm text-blue-600 hover:bg-gray-100 p-2 rounded"
                   >
