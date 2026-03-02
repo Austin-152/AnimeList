@@ -53,7 +53,7 @@ bun dev
 
 ```bash
 # 后端 API 基地址（前后端均可用）
-NEXT_PUBLIC_BASE_URL=https://animeapi.rypro.me
+NEXT_PUBLIC_BASE_URL=https://your.api
 
 # Logto（OIDC）配置
 LOGTO_ENDPOINT=https://your-logto.example.com
