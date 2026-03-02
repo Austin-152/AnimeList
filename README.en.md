@@ -53,7 +53,7 @@ Create a .env.local file in the project root:
 
 ```bash
 # Backend API base (used on client and server)
-NEXT_PUBLIC_BASE_URL=https://animeapi.rypro.me
+NEXT_PUBLIC_BASE_URL=https://your.api
 
 # Logto (OIDC) settings
 LOGTO_ENDPOINT=https://your-logto.example.com
